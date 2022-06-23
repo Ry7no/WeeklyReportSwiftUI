@@ -57,11 +57,10 @@
 		FD80C93628616E0B003CAB02 /* WeeklyReportSwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				FD80C949286207DC003CAB02 /* UserManager.swift */,
-				FD80C94528617117003CAB02 /* ReportViewModel.swift */,
+				FD80C94F28642726003CAB02 /* Models */,
+				FD80C9502864272B003CAB02 /* ViewModels */,
+				FD80C94E28642720003CAB02 /* Views */,
 				FD80C93728616E0B003CAB02 /* WeeklyReportSwiftUIApp.swift */,
-				FD80C93928616E0B003CAB02 /* ContentView.swift */,
-				FD80C94B286212E9003CAB02 /* EditView.swift */,
 				FD80C93B28616E0C003CAB02 /* Assets.xcassets */,
 				FD80C93D28616E0C003CAB02 /* Preview Content */,
 			);
@@ -74,6 +73,31 @@
 				FD80C93E28616E0C003CAB02 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		FD80C94E28642720003CAB02 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FD80C94B286212E9003CAB02 /* EditView.swift */,
+				FD80C93928616E0B003CAB02 /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FD80C94F28642726003CAB02 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FD80C949286207DC003CAB02 /* UserManager.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		FD80C9502864272B003CAB02 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				FD80C94528617117003CAB02 /* ReportViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

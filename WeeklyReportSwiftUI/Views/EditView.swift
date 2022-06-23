@@ -30,10 +30,12 @@ struct EditView: View {
     @State private var thisWeekPlan: String
     @State private var nextWeekPlan: String
     @State private var suggestion: String
+    
     @State var isShowSaveAlert = false
     @State var isShowClearAlert = false
     
     init(){
+        
         UserDefaults.standard.set("陳俊宏-工作週報_111-06-13_to_111-06-17", forKey: "outputFileName")
         userEmail = UserDefaults.standard.string(forKey: "userEmail") ?? "default@email.com"
         userName = UserDefaults.standard.string(forKey: "userName") ?? "你的名字"
@@ -54,40 +56,14 @@ struct EditView: View {
         thisWeekPlan = UserDefaults.standard.string(forKey: "thisWeekPlan") ?? "本週計畫"
         nextWeekPlan = UserDefaults.standard.string(forKey: "nextWeekPlan") ?? "下週計畫"
         suggestion = UserDefaults.standard.string(forKey: "suggestion") ?? "建議與協助事項"
-        
-        let dateStr = "2022/\(startMonth)/\(startDay)"
-        let startDateString = dateToString(date: stringToDate(dateStr: dateStr))
-        let endDateString = dateToString(date: Calendar.current.date(byAdding: .day, value: 4, to: stringToDate(dateStr: dateStr))!)
-        let startDateFile = dateToStringFileName(date: stringToDate(dateStr: dateStr))
-        let endDateFile = dateToStringFileName(date: Calendar.current.date(byAdding: .day, value: 4, to: stringToDate(dateStr: dateStr))!)
-        
-        UserManager.shared.startDateString = startDateString
-        UserManager.shared.endDateString = endDateString
-        UserManager.shared.startDateFile = startDateFile
-        UserManager.shared.endDateFile = endDateFile
-        
-        let monday = stringToDate(dateStr: dateStr)
-        let tuesday = Calendar.current.date(byAdding: .day, value: 1, to: stringToDate(dateStr: dateStr))
-        let wednesday = Calendar.current.date(byAdding: .day, value: 2, to: stringToDate(dateStr: dateStr))
-        let thursday = Calendar.current.date(byAdding: .day, value: 3, to: stringToDate(dateStr: dateStr))
-        let friday = Calendar.current.date(byAdding: .day, value: 4, to: stringToDate(dateStr: dateStr))
-        let mondayString = dateToStringMMDD(date: monday)
-        let tuesdayString = dateToStringMMDD(date: tuesday!)
-        let wednesdayString = dateToStringMMDD(date: wednesday!)
-        let thursdayString = dateToStringMMDD(date: thursday!)
-        let fridayString = dateToStringMMDD(date: friday!)
-        
-        UserManager.shared.mondayString = mondayString
-        UserManager.shared.tuesdayString = tuesdayString
-        UserManager.shared.wednesdayString = wednesdayString
-        UserManager.shared.thursdayString = thursdayString
-        UserManager.shared.fridayString = fridayString
+
+        reportViewModel.dateInitManager()
         
         UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
         
     }
     
-//    @Environment(\.presentationMode) var presentationMode
+    //    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         
@@ -109,7 +85,7 @@ struct EditView: View {
                     )
             }
             .padding()
-
+            
             VStack (alignment: .leading, spacing: 3) {
                 
                 Text("請輸入姓名：")
@@ -409,7 +385,7 @@ struct EditView: View {
                         .modifier(ClearEditorButton(text: $thisWeekPlan))
                 }
                 
-                    
+                
                 TextEditor(text: $thisWeekPlan)
                     .frame(height: 100, alignment: .leading)
                     .overlay(RoundedRectangle(cornerRadius: 5)
@@ -433,7 +409,7 @@ struct EditView: View {
                     Text("")
                         .modifier(ClearEditorButton(text: $nextWeekPlan))
                 }
-                    
+                
                 TextEditor(text: $nextWeekPlan)
                     .frame(height: 100, alignment: .leading)
                     .overlay(RoundedRectangle(cornerRadius: 5)
@@ -457,7 +433,7 @@ struct EditView: View {
                     Text("")
                         .modifier(ClearEditorButton(text: $suggestion))
                 }
-
+                
                 TextEditor(text: $suggestion)
                     .frame(height: 100, alignment: .leading)
                     .overlay(RoundedRectangle(cornerRadius: 5)
@@ -470,11 +446,13 @@ struct EditView: View {
             
             HStack {
                 deleteButton
-                saveButton
                 
+                if FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).isEmpty {
+                    saveButton.hidden()
+                } else {
+                    saveButton
+                }
             }
-            
-
         }
         .padding()
     }
@@ -518,43 +496,6 @@ struct EditView: View {
             }
         }
     }
-    
-    func stringToDate(dateStr: String) -> Date {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM/dd"
-        guard let date = dateFormatter.date(from: dateStr) else { return Date() }
-        return date
-    }
-    
-    func dateToStringFileName(date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyy-MM-dd"
-        dateFormatter.locale = Locale(identifier: "zh_Hant_TW") // 設定地區(台灣)
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Taipei") // 設定時區(台灣)
-        dateFormatter.calendar = Calendar(identifier: Calendar.Identifier.republicOfChina)
-        
-        let string = dateFormatter.string(from: date)
-        return string
-    }
-    
-    func dateToString(date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyy/MM/dd"
-        dateFormatter.locale = Locale(identifier: "zh_Hant_TW") // 設定地區(台灣)
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Taipei") // 設定時區(台灣)
-        dateFormatter.calendar = Calendar(identifier: Calendar.Identifier.republicOfChina)
-        
-        let string = dateFormatter.string(from: date)
-        return string
-    }
-    
-    func dateToStringMMDD(date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd"
-        
-        let string = dateFormatter.string(from: date)
-        return string
-    }
 }
 
 extension EditView {
@@ -585,36 +526,10 @@ extension EditView {
             UserDefaults.standard.set(nextWeekPlan ,forKey: "nextWeekPlan")
             UserDefaults.standard.set(suggestion ,forKey: "suggestion")
             
-            let dateStr = "2022/\(startMonth)/\(startDay)"
-            let startDateString = dateToString(date: stringToDate(dateStr: dateStr))
-            let endDateString = dateToString(date: Calendar.current.date(byAdding: .day, value: 4, to: stringToDate(dateStr: dateStr))!)
-            let startDateFile = dateToStringFileName(date: stringToDate(dateStr: dateStr))
-            let endDateFile = dateToStringFileName(date: Calendar.current.date(byAdding: .day, value: 4, to: stringToDate(dateStr: dateStr))!)
-            
-            UserManager.shared.startDateString = startDateString
-            UserManager.shared.endDateString = endDateString
-            UserManager.shared.startDateFile = startDateFile
-            UserManager.shared.endDateFile = endDateFile
-            
-            let monday = stringToDate(dateStr: dateStr)
-            let tuesday = Calendar.current.date(byAdding: .day, value: 1, to: stringToDate(dateStr: dateStr))
-            let wednesday = Calendar.current.date(byAdding: .day, value: 2, to: stringToDate(dateStr: dateStr))
-            let thursday = Calendar.current.date(byAdding: .day, value: 3, to: stringToDate(dateStr: dateStr))
-            let friday = Calendar.current.date(byAdding: .day, value: 4, to: stringToDate(dateStr: dateStr))
-            let mondayString = dateToStringMMDD(date: monday)
-            let tuesdayString = dateToStringMMDD(date: tuesday!)
-            let wednesdayString = dateToStringMMDD(date: wednesday!)
-            let thursdayString = dateToStringMMDD(date: thursday!)
-            let fridayString = dateToStringMMDD(date: friday!)
-            
-            UserManager.shared.mondayString = mondayString
-            UserManager.shared.tuesdayString = tuesdayString
-            UserManager.shared.wednesdayString = wednesdayString
-            UserManager.shared.thursdayString = thursdayString
-            UserManager.shared.fridayString = fridayString
+            reportViewModel.dateInitManager()
             
             isShowSaveAlert.toggle()
-        
+            
             //                presentation.wrappedValue.dismiss()
             
         } label: {
@@ -627,21 +542,21 @@ extension EditView {
         .padding()
         .buttonStyle(.borderedProminent)
         .alert("已儲存", isPresented: $isShowSaveAlert) {
-//                self.presentationMode.wrappedValue.dismiss()
-//                presentation.wrappedValue.dismiss()
+            //                self.presentationMode.wrappedValue.dismiss()
+            //                presentation.wrappedValue.dismiss()
         }
     }
     
     private var deleteButton: some View{
         
         Button(role: .destructive) {
-
-//            reportViewModel.clearDiskCache()
+            
+            //            reportViewModel.clearDiskCache()
             reportViewModel.clearAllFile()
             isShowClearAlert.toggle()
-    
+            
         } label: {
-            Text("DELETE")
+            Text("CLEAN FOLDER")
                 .font(.headline.bold())
                 .frame(maxWidth: UIScreen.main.bounds.width / 2)
                 .padding([.vertical], 6)
@@ -649,10 +564,11 @@ extension EditView {
         .padding()
         .buttonStyle(.borderedProminent)
         .alert("已刪除", isPresented: $isShowClearAlert) {
-
-//                self.presentationMode.wrappedValue.dismiss()
-//                presentation.wrappedValue.dismiss()
+            
+            //                self.presentationMode.wrappedValue.dismiss()
+            //                presentation.wrappedValue.dismiss()
         }
+        
     }
 }
 
