@@ -54,6 +54,37 @@ struct EditView: View {
         thisWeekPlan = UserDefaults.standard.string(forKey: "thisWeekPlan") ?? "本週計畫"
         nextWeekPlan = UserDefaults.standard.string(forKey: "nextWeekPlan") ?? "下週計畫"
         suggestion = UserDefaults.standard.string(forKey: "suggestion") ?? "建議與協助事項"
+        
+        let dateStr = "2022/\(startMonth)/\(startDay)"
+        let startDateString = dateToString(date: stringToDate(dateStr: dateStr))
+        let endDateString = dateToString(date: Calendar.current.date(byAdding: .day, value: 4, to: stringToDate(dateStr: dateStr))!)
+        let startDateFile = dateToStringFileName(date: stringToDate(dateStr: dateStr))
+        let endDateFile = dateToStringFileName(date: Calendar.current.date(byAdding: .day, value: 4, to: stringToDate(dateStr: dateStr))!)
+        
+        UserManager.shared.startDateString = startDateString
+        UserManager.shared.endDateString = endDateString
+        UserManager.shared.startDateFile = startDateFile
+        UserManager.shared.endDateFile = endDateFile
+        
+        let monday = stringToDate(dateStr: dateStr)
+        let tuesday = Calendar.current.date(byAdding: .day, value: 1, to: stringToDate(dateStr: dateStr))
+        let wednesday = Calendar.current.date(byAdding: .day, value: 2, to: stringToDate(dateStr: dateStr))
+        let thursday = Calendar.current.date(byAdding: .day, value: 3, to: stringToDate(dateStr: dateStr))
+        let friday = Calendar.current.date(byAdding: .day, value: 4, to: stringToDate(dateStr: dateStr))
+        let mondayString = dateToStringMMDD(date: monday)
+        let tuesdayString = dateToStringMMDD(date: tuesday!)
+        let wednesdayString = dateToStringMMDD(date: wednesday!)
+        let thursdayString = dateToStringMMDD(date: thursday!)
+        let fridayString = dateToStringMMDD(date: friday!)
+        
+        UserManager.shared.mondayString = mondayString
+        UserManager.shared.tuesdayString = tuesdayString
+        UserManager.shared.wednesdayString = wednesdayString
+        UserManager.shared.thursdayString = thursdayString
+        UserManager.shared.fridayString = fridayString
+        
+        UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
+        
     }
     
 //    @Environment(\.presentationMode) var presentationMode
@@ -68,7 +99,7 @@ struct EditView: View {
                     .font(.caption)
                     .foregroundColor(.teal)
                 
-                TextField("\(UserDefaults.standard.string(forKey: "userEmail") ?? "收件Email")", text: $userEmail)
+                TextField("\(UserDefaults.standard.string(forKey: "userEmail") ?? "收件Email")", text: $userEmail).modifier(ClearButton(text: $userEmail))
                     .padding(.leading, 7)
                     .frame(height: 40, alignment: .leading)
                     .overlay(
@@ -85,7 +116,7 @@ struct EditView: View {
                     .font(.caption)
                     .foregroundColor(.teal)
                 
-                TextField("\(UserDefaults.standard.string(forKey: "userName") ?? "你的名字")", text: $userName)
+                TextField("\(UserDefaults.standard.string(forKey: "userName") ?? "你的名字")", text: $userName).modifier(ClearButton(text: $userName))
                     .padding(.leading, 7)
                     .frame(height: 40, alignment: .leading)
                     .overlay(
@@ -102,7 +133,7 @@ struct EditView: View {
                     .font(.caption)
                     .foregroundColor(.teal)
                 
-                TextField("\(UserDefaults.standard.string(forKey: "userTitle") ?? "你的職稱")", text: $userTitle)
+                TextField("\(UserDefaults.standard.string(forKey: "userTitle") ?? "你的職稱")", text: $userTitle).modifier(ClearButton(text: $userTitle))
                     .padding(.leading, 7)
                     .frame(height: 40, alignment: .leading)
                     .overlay(
@@ -120,7 +151,7 @@ struct EditView: View {
                         .font(.caption)
                         .foregroundColor(.teal)
                     
-                    TextField("\(UserDefaults.standard.string(forKey: "startMonth") ?? "開始月")", text: $startMonth)
+                    TextField("\(UserDefaults.standard.string(forKey: "startMonth") ?? "開始月")", text: $startMonth).modifier(ClearButton(text: $startMonth))
                         .padding(.leading, 7)
                         .frame(height: 40, alignment: .leading)
                         .overlay(
@@ -137,7 +168,7 @@ struct EditView: View {
                         .font(.caption)
                         .foregroundColor(.teal)
                     
-                    TextField("\(UserDefaults.standard.string(forKey: "startDay") ?? "開始日")", text: $startDay)
+                    TextField("\(UserDefaults.standard.string(forKey: "startDay") ?? "開始日")", text: $startDay).modifier(ClearButton(text: $startDay))
                         .padding(.leading, 7)
                         .frame(height: 40, alignment: .leading)
                         .overlay(
@@ -151,9 +182,18 @@ struct EditView: View {
             
             VStack (alignment: .leading, spacing: 3) {
                 
-                Text("請輸入主管交辦任務：")
-                    .font(.caption)
-                    .foregroundColor(.teal)
+                HStack {
+                    Text("請輸入主管交辦任務：")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.caption)
+                        .foregroundColor(.teal)
+                    
+                    Spacer()
+                    
+                    Text("")
+                        .modifier(ClearEditorButton(text: $missions))
+                }
+                
                 
                 TextEditor(text: $missions)
                     .frame(height: 100, alignment: .leading)
@@ -161,6 +201,7 @@ struct EditView: View {
                         .stroke(lineWidth: missions.isEmpty ? 2 : 1)
                         .foregroundColor(missions.isEmpty ? .red : .teal)
                     )
+                
             }
             .padding()
             
@@ -176,7 +217,7 @@ struct EditView: View {
                         Text("早：")
                             .foregroundColor(.teal)
                         
-                        TextField("\(UserDefaults.standard.string(forKey: "mondayMorningDetails") ?? "週一早上細項")", text: $mondayMorningDetails)
+                        TextField("\(UserDefaults.standard.string(forKey: "mondayMorningDetails") ?? "週一早上細項")", text: $mondayMorningDetails).modifier(ClearButton(text: $mondayMorningDetails))
                             .padding(.leading, 7)
                             .frame(height: 40, alignment: .leading)
                             .overlay(
@@ -190,7 +231,7 @@ struct EditView: View {
                         Text("午：")
                             .foregroundColor(.teal)
                         
-                        TextField("\(UserDefaults.standard.string(forKey: "mondayAfternoonDetails") ?? "週一下午細項")", text: $mondayAfternoonDetails)
+                        TextField("\(UserDefaults.standard.string(forKey: "mondayAfternoonDetails") ?? "週一下午細項")", text: $mondayAfternoonDetails).modifier(ClearButton(text: $mondayAfternoonDetails))
                             .padding(.leading, 7)
                             .frame(height: 40, alignment: .leading)
                             .overlay(
@@ -213,7 +254,7 @@ struct EditView: View {
                         Text("早：")
                             .foregroundColor(.teal)
                         
-                        TextField("\(UserDefaults.standard.string(forKey: "tuesdayMorningDetails") ?? "週二早上細項")", text: $tuesdayMorningDetails)
+                        TextField("\(UserDefaults.standard.string(forKey: "tuesdayMorningDetails") ?? "週二早上細項")", text: $tuesdayMorningDetails).modifier(ClearButton(text: $tuesdayMorningDetails))
                             .padding(.leading, 7)
                             .frame(height: 40, alignment: .leading)
                             .overlay(
@@ -227,7 +268,7 @@ struct EditView: View {
                         Text("午：")
                             .foregroundColor(.teal)
                         
-                        TextField("\(UserDefaults.standard.string(forKey: "tuesdayAfternoonDetails") ?? "週二下午細項")", text: $tuesdayAfternoonDetails)
+                        TextField("\(UserDefaults.standard.string(forKey: "tuesdayAfternoonDetails") ?? "週二下午細項")", text: $tuesdayAfternoonDetails).modifier(ClearButton(text: $tuesdayAfternoonDetails))
                             .padding(.leading, 7)
                             .frame(height: 40, alignment: .leading)
                             .overlay(
@@ -250,7 +291,7 @@ struct EditView: View {
                         Text("早：")
                             .foregroundColor(.teal)
                         
-                        TextField("\(UserDefaults.standard.string(forKey: "wednesdayMorningDetails") ?? "週三早上細項")", text: $wednesdayMorningDetails)
+                        TextField("\(UserDefaults.standard.string(forKey: "wednesdayMorningDetails") ?? "週三早上細項")", text: $wednesdayMorningDetails).modifier(ClearButton(text: $wednesdayMorningDetails))
                             .padding(.leading, 7)
                             .frame(height: 40, alignment: .leading)
                             .overlay(
@@ -264,7 +305,7 @@ struct EditView: View {
                         Text("午：")
                             .foregroundColor(.teal)
                         
-                        TextField("\(UserDefaults.standard.string(forKey: "wednesdayAfternoonDetails") ?? "週三下午細項")", text: $wednesdayAfternoonDetails)
+                        TextField("\(UserDefaults.standard.string(forKey: "wednesdayAfternoonDetails") ?? "週三下午細項")", text: $wednesdayAfternoonDetails).modifier(ClearButton(text: $wednesdayAfternoonDetails))
                             .padding(.leading, 7)
                             .frame(height: 40, alignment: .leading)
                             .overlay(
@@ -287,7 +328,7 @@ struct EditView: View {
                         Text("早：")
                             .foregroundColor(.teal)
                         
-                        TextField("\(UserDefaults.standard.string(forKey: "thursdayMorningDetails") ?? "週四早上細項")", text: $thursdayMorningDetails)
+                        TextField("\(UserDefaults.standard.string(forKey: "thursdayMorningDetails") ?? "週四早上細項")", text: $thursdayMorningDetails).modifier(ClearButton(text: $thursdayMorningDetails))
                             .padding(.leading, 7)
                             .frame(height: 40, alignment: .leading)
                             .overlay(
@@ -301,7 +342,7 @@ struct EditView: View {
                         Text("午：")
                             .foregroundColor(.teal)
                         
-                        TextField("\(UserDefaults.standard.string(forKey: "thursdayAfternoonDetails") ?? "週四下午細項")", text: $thursdayAfternoonDetails)
+                        TextField("\(UserDefaults.standard.string(forKey: "thursdayAfternoonDetails") ?? "週四下午細項")", text: $thursdayAfternoonDetails).modifier(ClearButton(text: $thursdayAfternoonDetails))
                             .padding(.leading, 7)
                             .frame(height: 40, alignment: .leading)
                             .overlay(
@@ -324,7 +365,7 @@ struct EditView: View {
                         Text("早：")
                             .foregroundColor(.teal)
                         
-                        TextField("\(UserDefaults.standard.string(forKey: "fridayMorningDetails") ?? "週五早上細項")", text: $fridayMorningDetails)
+                        TextField("\(UserDefaults.standard.string(forKey: "fridayMorningDetails") ?? "週五早上細項")", text: $fridayMorningDetails).modifier(ClearButton(text: $fridayMorningDetails))
                             .padding(.leading, 7)
                             .frame(height: 40, alignment: .leading)
                             .overlay(
@@ -338,7 +379,7 @@ struct EditView: View {
                         Text("午：")
                             .foregroundColor(.teal)
                         
-                        TextField("\(UserDefaults.standard.string(forKey: "fridayAfternoonDetails") ?? "週五下午細項")", text: $fridayAfternoonDetails)
+                        TextField("\(UserDefaults.standard.string(forKey: "fridayAfternoonDetails") ?? "週五下午細項")", text: $fridayAfternoonDetails).modifier(ClearButton(text: $fridayAfternoonDetails))
                             .padding(.leading, 7)
                             .frame(height: 40, alignment: .leading)
                             .overlay(
@@ -352,11 +393,21 @@ struct EditView: View {
                 .padding()
             }
             
+            
+            
             VStack (alignment: .leading, spacing: 3) {
                 
-                Text("請輸入本週工作摘要：")
-                    .font(.caption)
-                    .foregroundColor(.teal)
+                HStack {
+                    Text("請輸入本週工作摘要：")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.caption)
+                        .foregroundColor(.teal)
+                    
+                    Spacer()
+                    
+                    Text("")
+                        .modifier(ClearEditorButton(text: $thisWeekPlan))
+                }
                 
                     
                 TextEditor(text: $thisWeekPlan)
@@ -371,10 +422,17 @@ struct EditView: View {
             
             VStack (alignment: .leading, spacing: 3) {
                 
-                Text("請輸入下週工作計畫：")
-                    .font(.caption)
-                    .foregroundColor(.teal)
-                
+                HStack {
+                    Text("請輸入下週工作計畫：")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.caption)
+                        .foregroundColor(.teal)
+                    
+                    Spacer()
+                    
+                    Text("")
+                        .modifier(ClearEditorButton(text: $nextWeekPlan))
+                }
                     
                 TextEditor(text: $nextWeekPlan)
                     .frame(height: 100, alignment: .leading)
@@ -388,11 +446,18 @@ struct EditView: View {
             
             VStack (alignment: .leading, spacing: 3) {
                 
-                Text("請輸入建議及協助事項：")
-                    .font(.caption)
-                    .foregroundColor(.teal)
-                
+                HStack {
+                    Text("請輸入建議及協助事項：")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.caption)
+                        .foregroundColor(.teal)
                     
+                    Spacer()
+                    
+                    Text("")
+                        .modifier(ClearEditorButton(text: $suggestion))
+                }
+
                 TextEditor(text: $suggestion)
                     .frame(height: 100, alignment: .leading)
                     .overlay(RoundedRectangle(cornerRadius: 5)
@@ -412,6 +477,46 @@ struct EditView: View {
 
         }
         .padding()
+    }
+    
+    struct ClearButton: ViewModifier {
+        @Binding var text: String
+        public func body(content: Content) -> some View {
+            ZStack(alignment: .trailing) {
+                content
+                
+                if !text.isEmpty {
+                    Button(action: {
+                        self.text = ""
+                    })
+                    {
+                        Image(systemName: "delete.left")
+                            .foregroundColor(Color(UIColor.opaqueSeparator))
+                    }
+                    .padding(.trailing, 8)
+                }
+            }
+        }
+    }
+    
+    struct ClearEditorButton: ViewModifier {
+        @Binding var text: String
+        public func body(content: Content) -> some View {
+            ZStack(alignment: .topTrailing) {
+                content
+                
+                if !text.isEmpty {
+                    Button(action: {
+                        self.text = ""
+                    })
+                    {
+                        Image(systemName: "multiply.square")
+                            .foregroundColor(Color(UIColor.opaqueSeparator))
+                    }
+                    .padding([.bottom], 2)
+                }
+            }
+        }
     }
     
     func stringToDate(dateStr: String) -> Date {
