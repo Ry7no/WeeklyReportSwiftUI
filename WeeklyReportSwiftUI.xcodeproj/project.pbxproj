@@ -14,6 +14,11 @@
 		FD80C94628617117003CAB02 /* ReportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD80C94528617117003CAB02 /* ReportViewModel.swift */; };
 		FD80C94A286207DC003CAB02 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD80C949286207DC003CAB02 /* UserManager.swift */; };
 		FD80C94C286212E9003CAB02 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD80C94B286212E9003CAB02 /* EditView.swift */; };
+		FD80C972286D5E28003CAB02 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = FD80C971286D5E28003CAB02 /* Lottie */; };
+		FD80C975286D5E7D003CAB02 /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD80C974286D5E7D003CAB02 /* LottieView.swift */; };
+		FD80C977286D5E85003CAB02 /* CheckedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD80C976286D5E85003CAB02 /* CheckedView.swift */; };
+		FD80C979286D5E8C003CAB02 /* HiddenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD80C978286D5E8C003CAB02 /* HiddenView.swift */; };
+		FD80C97B286D5E92003CAB02 /* Checked.json in Resources */ = {isa = PBXBuildFile; fileRef = FD80C97A286D5E92003CAB02 /* Checked.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +30,10 @@
 		FD80C94528617117003CAB02 /* ReportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewModel.swift; sourceTree = "<group>"; };
 		FD80C949286207DC003CAB02 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		FD80C94B286212E9003CAB02 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
+		FD80C974286D5E7D003CAB02 /* LottieView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
+		FD80C976286D5E85003CAB02 /* CheckedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckedView.swift; sourceTree = "<group>"; };
+		FD80C978286D5E8C003CAB02 /* HiddenView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenView.swift; sourceTree = "<group>"; };
+		FD80C97A286D5E92003CAB02 /* Checked.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Checked.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD80C972286D5E28003CAB02 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,7 +71,9 @@
 				FD80C9502864272B003CAB02 /* ViewModels */,
 				FD80C94E28642720003CAB02 /* Views */,
 				FD80C93728616E0B003CAB02 /* WeeklyReportSwiftUIApp.swift */,
+				FD80C973286D5E66003CAB02 /* Extensions */,
 				FD80C93B28616E0C003CAB02 /* Assets.xcassets */,
+				FD80C97A286D5E92003CAB02 /* Checked.json */,
 				FD80C93D28616E0C003CAB02 /* Preview Content */,
 			);
 			path = WeeklyReportSwiftUI;
@@ -100,6 +112,16 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		FD80C973286D5E66003CAB02 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				FD80C974286D5E7D003CAB02 /* LottieView.swift */,
+				FD80C976286D5E85003CAB02 /* CheckedView.swift */,
+				FD80C978286D5E8C003CAB02 /* HiddenView.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -116,6 +138,9 @@
 			dependencies = (
 			);
 			name = WeeklyReportSwiftUI;
+			packageProductDependencies = (
+				FD80C971286D5E28003CAB02 /* Lottie */,
+			);
 			productName = WeeklyReportSwiftUI;
 			productReference = FD80C93428616E0B003CAB02 /* 週報包軌.app */;
 			productType = "com.apple.product-type.application";
@@ -144,6 +169,9 @@
 				Base,
 			);
 			mainGroup = FD80C92B28616E0B003CAB02;
+			packageReferences = (
+				FD80C970286D5E28003CAB02 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+			);
 			productRefGroup = FD80C93528616E0B003CAB02 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -160,6 +188,7 @@
 			files = (
 				FD80C93F28616E0C003CAB02 /* Preview Assets.xcassets in Resources */,
 				FD80C93C28616E0C003CAB02 /* Assets.xcassets in Resources */,
+				FD80C97B286D5E92003CAB02 /* Checked.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,9 +201,12 @@
 			files = (
 				FD80C94628617117003CAB02 /* ReportViewModel.swift in Sources */,
 				FD80C94C286212E9003CAB02 /* EditView.swift in Sources */,
+				FD80C979286D5E8C003CAB02 /* HiddenView.swift in Sources */,
 				FD80C93A28616E0B003CAB02 /* ContentView.swift in Sources */,
 				FD80C94A286207DC003CAB02 /* UserManager.swift in Sources */,
+				FD80C977286D5E85003CAB02 /* CheckedView.swift in Sources */,
 				FD80C93828616E0B003CAB02 /* WeeklyReportSwiftUIApp.swift in Sources */,
+				FD80C975286D5E7D003CAB02 /* LottieView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,7 +333,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
+				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"WeeklyReportSwiftUI/Preview Content\"";
 				DEVELOPMENT_TEAM = 48394HVWDA;
 				ENABLE_PREVIEWS = YES;
@@ -316,7 +349,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.novachen.WeeklyReportSwiftUI;
 				PRODUCT_NAME = "週報包軌";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -331,7 +364,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
+				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"WeeklyReportSwiftUI/Preview Content\"";
 				DEVELOPMENT_TEAM = 48394HVWDA;
 				ENABLE_PREVIEWS = YES;
@@ -346,7 +380,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.novachen.WeeklyReportSwiftUI;
 				PRODUCT_NAME = "週報包軌";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -377,6 +411,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FD80C970286D5E28003CAB02 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FD80C971286D5E28003CAB02 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FD80C970286D5E28003CAB02 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FD80C92C28616E0B003CAB02 /* Project object */;
 }

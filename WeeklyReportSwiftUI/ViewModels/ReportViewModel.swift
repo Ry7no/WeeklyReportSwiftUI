@@ -14,25 +14,26 @@ import CoreText
 import QuartzCore
 
 class ReportViewModel: ObservableObject {
-    
+
     var interactionController = UIDocumentInteractionController()
-    var outputFileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("\(UserDefaults.standard.string(forKey: "outputFileName") ?? "Swift").pdf")
+    @State var outputFileURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("\(UserDefaults.standard.string(forKey: "outputFileName") ?? "Swift").pdf")
+    
     
 //    var outputHtmlURL: URL?
     
-    func clearDiskCache() {
-        let fileManager = FileManager.default
-        let myDocuments = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let diskCacheStorageBaseUrl = myDocuments.appendingPathComponent("\(UserDefaults.standard.string(forKey: "outputFileName")!).pdf")
-        guard let filePaths = try? fileManager.contentsOfDirectory(at: diskCacheStorageBaseUrl, includingPropertiesForKeys: nil, options: []) else { return }
-        for filePath in filePaths {
-            try? fileManager.removeItem(at: filePath)
-        }
-    }
+//    func clearDiskCache() {
+//        let fileManager = FileManager.default
+//        let myDocuments = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+//        let diskCacheStorageBaseUrl = myDocuments.appendingPathComponent("\(UserDefaults.standard.string(forKey: "outputFileName")!).pdf")
+//        guard let filePaths = try? fileManager.contentsOfDirectory(at: diskCacheStorageBaseUrl, includingPropertiesForKeys: nil, options: []) else { return }
+//        for filePath in filePaths {
+//            try? fileManager.removeItem(at: filePath)
+//        }
+//    }
     
     func clearAllFile() {
         let fileManager = FileManager.default
-        let myDocuments = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let myDocuments = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
         do {
             try fileManager.removeItem(at: myDocuments)
             print("Clear all file")
@@ -154,7 +155,7 @@ class ReportViewModel: ObservableObject {
 }
 
 //struct PDFKitRepresentedView: UIViewRepresentable {
-//    
+//
 //    let url: URL
 //
 //    init(_ url: URL) {

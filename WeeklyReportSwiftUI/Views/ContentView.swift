@@ -23,6 +23,10 @@ struct ContentView: View {
     @State var fileName = "陳俊宏-工作週報_111-06-13_to_111-06-17"
     @State var isShowAlert = false
     
+    @State var PDFUrl: URL?
+    @State var isShowingShareSheet = false
+   
+    
     init(){
         reportViewModel.dateInitManager()
     }
@@ -72,33 +76,49 @@ extension ContentView {
             Button("編輯ＰＤＦ", role: .destructive) {
                 isShowingEditSheet.toggle()
             }
-
-//            Button("生成ＰＤＦ") {
-//                fileName = "\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")"
-//                UserDefaults.standard.set(fileName ,forKey: "outputFileName")
-//                print(UserDefaults.standard.string(forKey: "outputFileName")!)
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-//                    reportViewModel.exportViewToPDF()
-//                }
-//            }
             
             Button("預覽ＰＤＦ") {
-                fileName = "\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")"
-                UserDefaults.standard.set(fileName ,forKey: "outputFileName")
-                print(UserDefaults.standard.string(forKey: "outputFileName")!)
                 
-                DispatchQueue.main.async {
+                reportViewModel.clearAllFile()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     
                     reportViewModel.exportViewToPDF()
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         isShowingPDFSheet.toggle()
                     }
                 }
             }
             
             Button("寄送ＰＤＦ") {
-                isShowingMailView.toggle()
+                
+                UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
+                
+                reportViewModel.clearAllFile()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    
+                    reportViewModel.exportViewToPDF()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        isShowingMailView.toggle()
+                    }
+                }
+            }
+            
+            Button("分享ＰＤＦ"){
+                
+                let group = DispatchGroup()
+                group.enter()
+                reportViewModel.clearAllFile()
+                group.leave()
+                group.wait()
+                group.enter()
+                reportViewModel.exportViewToPDF()
+                self.PDFUrl = reportViewModel.outputFileURL
+                isShowingShareSheet.toggle()
+   
             }
             
             Button("取消", role: .cancel) {
@@ -113,6 +133,13 @@ extension ContentView {
         }
         .sheet(isPresented: $isShowingMailView) {
             MailView(result: self.$result, fileName: self.$fileName)
+        }
+        .sheet(isPresented: $isShowingShareSheet) {
+            PDFUrl = nil
+        } content: {
+            if let PDFUrl = PDFUrl {
+                ShareSheet(urls: [PDFUrl])
+            }
         }
     }
     
@@ -317,6 +344,7 @@ extension ContentView {
     }
 }
 
+// MARK: PDF Preview Sheet
 struct PDFKitRepresentedView: UIViewRepresentable {
     
     let url: URL
@@ -338,11 +366,15 @@ struct PDFKitRepresentedView: UIViewRepresentable {
     }
 }
 
+// MARK: Mail Sheet
 struct MailView: UIViewControllerRepresentable {
 
     @Environment(\.presentationMode) var presentation
+    @ObservedObject var reportViewModel = ReportViewModel()
     @Binding var result: Result<MFMailComposeResult, Error>?
     @Binding var fileName: String
+    
+    @State var outputFileName = UserDefaults.standard.string(forKey: "outputFileName")!
 
     class Coordinator: NSObject, MFMailComposeViewControllerDelegate {
 
@@ -375,7 +407,7 @@ struct MailView: UIViewControllerRepresentable {
     }
 
     func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let paths = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
@@ -384,20 +416,25 @@ struct MailView: UIViewControllerRepresentable {
         
         let urlString = "<privateurl>"
         let url = URL(string: urlString)
+        let userEmail = UserDefaults.standard.string(forKey: "userEmail") ?? "defaultUser@email.com"
+        var userEmailTitle = UserDefaults.standard.string(forKey: "userEmailTitle")!
+        var userEmailContent = UserDefaults.standard.string(forKey: "userEmailContent")!
+        var userEmailSignature = UserDefaults.standard.string(forKey: "userEmailSignature")!
 
         let vc = MFMailComposeViewController()
         vc.mailComposeDelegate = context.coordinator
-        vc.setToRecipients(["\(UserDefaults.standard.string(forKey: "userEmail")!)"])
-        vc.setMessageBody("\(UserDefaults.standard.string(forKey: "outputFileName")!)", isHTML: true)
-        vc.setSubject("\(UserDefaults.standard.string(forKey: "outputFileName")!)")
+        vc.setToRecipients(["\(userEmail)"])
+        vc.setSubject("\(userEmailTitle)")
+        vc.setMessageBody("\(userEmailContent)\n<hr>\n\(userEmailSignature)", isHTML: true)
+        vc.reloadInputViews()
     
         
         let docDirectory = getDocumentsDirectory()
-        let filePath = docDirectory.appendingPathComponent("\(UserDefaults.standard.string(forKey: "outputFileName")!).pdf")
+        let filePath = docDirectory.appendingPathComponent("\(outputFileName).pdf")
 
         if let fileData = NSData(contentsOf: filePath) {
                  print("File data loaded.")
-                 vc.addAttachmentData(fileData as Data, mimeType: "application/pdf", fileName: "\(UserDefaults.standard.string(forKey: "outputFileName")!).pdf")
+                 vc.addAttachmentData(fileData as Data, mimeType: "application/pdf", fileName: "\(outputFileName).pdf")
          }
         return vc
     }
@@ -406,6 +443,23 @@ struct MailView: UIViewControllerRepresentable {
                                 context: UIViewControllerRepresentableContext<MailView>) {
 
     }
+}
+
+// MARK: Share Sheet
+struct ShareSheet: UIViewControllerRepresentable {
+    
+    var urls: [Any]
+    
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: urls, applicationActivities: nil)
+        
+        return controller
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+        
+    }
+    
 }
 
 //struct ContentView_Previews: PreviewProvider {
