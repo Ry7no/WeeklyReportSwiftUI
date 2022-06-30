@@ -36,6 +36,7 @@ struct ContentView: View {
         VStack {
             
             alertButton
+                .background(.white)
             
             VStack(alignment: .leading, spacing: 0) {
                 
@@ -55,6 +56,8 @@ struct ContentView: View {
             .offset(x: 4)
             .padding()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.white)
     }
 }
 
@@ -149,15 +152,17 @@ extension ContentView {
             
             Text("姓名")
                 .font(.caption.bold())
+                .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 16) // 14.5
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserDefaults.standard.string(forKey: "userName") ?? "")")
                 .font(.caption2)
+                .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 16, alignment: .leading)
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
                 .offset(x: -8)
             
         }
@@ -171,15 +176,17 @@ extension ContentView {
             
             Text("職稱")
                 .font(.caption.bold())
+                .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 16)
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserDefaults.standard.string(forKey: "userTitle") ?? "")")
                 .font(.caption2)
+                .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 16, alignment: .leading)
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
                 .offset(x: -8)
             
         }
@@ -193,15 +200,17 @@ extension ContentView {
             
             Text("期間")
                 .font(.caption.bold())
+                .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 16)
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserManager.shared.startDateString ?? "111/06/13") ~ \(UserManager.shared.endDateString ?? "111/06/17")")
                 .font(.caption2)
+                .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 16, alignment: .leading)
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
                 .offset(x: -8)
             
         }
@@ -214,15 +223,17 @@ extension ContentView {
         HStack {
             Text("主管\n交辦\n任務")
                 .font(.caption.bold())
+                .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 60)// 46.5
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserDefaults.standard.string(forKey: "missions") ?? "")")
                 .font(.caption2)
+                .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 60, alignment: .leading)
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
                 .offset(x: -8)
         }
         .padding(0)
@@ -234,44 +245,50 @@ extension ContentView {
         HStack {
             Text("本\n週\n工\n作\n細\n部\n摘\n要")
                 .font(.caption.bold())
+                .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 288)
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             VStack (spacing: 0){
                 Text("一、\(UserManager.shared.mondayString ?? "06/13")\n早：\(UserDefaults.standard.string(forKey: "mondayMorningDetails") ?? "")\n午：\(UserDefaults.standard.string(forKey: "mondayAfternoonDetails") ?? "")")
                     .font(.caption2)
+                    .foregroundColor(.black)
                     .frame(maxWidth: .infinity, maxHeight: 50, alignment: .leading)
                     .padding(5)
-                    .overlay(Rectangle().stroke(lineWidth: 1))
+                    .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
                 .offset(x: -8)
                 
                 Text("二、\(UserManager.shared.tuesdayString ?? "06/14")\n早：\(UserDefaults.standard.string(forKey: "tuesdayMorningDetails") ?? "")\n午：\(UserDefaults.standard.string(forKey: "tuesdayAfternoonDetails") ?? "")")
                     .font(.caption2)
+                    .foregroundColor(.black)
                     .frame(maxWidth: .infinity, maxHeight: 50, alignment: .leading)
                     .padding(5)
-                    .overlay(Rectangle().stroke(lineWidth: 1))
+                    .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
                 .offset(x: -8)
                 
                 Text("三、\(UserManager.shared.wednesdayString ?? "06/15")\n早：\(UserDefaults.standard.string(forKey: "wednesdayMorningDetails") ?? "")\n午：\(UserDefaults.standard.string(forKey: "wednesdayAfternoonDetails") ?? "")")
                     .font(.caption2)
+                    .foregroundColor(.black)
                     .frame(maxWidth: .infinity, maxHeight: 50, alignment: .leading)
                     .padding(5)
-                    .overlay(Rectangle().stroke(lineWidth: 1))
+                    .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
                 .offset(x: -8)
                 
                 Text("四、\(UserManager.shared.thursdayString ?? "06/16")\n早：\(UserDefaults.standard.string(forKey: "thursdayMorningDetails") ?? "")\n午：\(UserDefaults.standard.string(forKey: "thursdayAfternoonDetails") ?? "")")
                     .font(.caption2)
+                    .foregroundColor(.black)
                     .frame(maxWidth: .infinity, maxHeight: 50, alignment: .leading)
                     .padding(5)
-                    .overlay(Rectangle().stroke(lineWidth: 1))
+                    .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
                 .offset(x: -8)
                 
                 Text("五、\(UserManager.shared.fridayString ?? "06/17")\n早：\(UserDefaults.standard.string(forKey: "fridayMorningDetails") ?? "")\n午：\(UserDefaults.standard.string(forKey: "fridayAfternoonDetails") ?? "")")
                     .font(.caption2)
+                    .foregroundColor(.black)
                     .frame(maxWidth: .infinity, maxHeight: 50, alignment: .leading)
                     .padding(5)
-                    .overlay(Rectangle().stroke(lineWidth: 1))
+                    .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
                 .offset(x: -8)
             }
         }
@@ -285,15 +302,17 @@ extension ContentView {
         HStack {
             Text("本週\n工作\n摘要")
                 .font(.caption.bold())
+                .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 60)
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserDefaults.standard.string(forKey: "thisWeekPlan") ?? "本週計畫")")
                 .font(.caption2)
+                .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 60, alignment: .leading)
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
                 .offset(x: -8)
         }
         .padding(0)
@@ -306,15 +325,17 @@ extension ContentView {
         HStack {
             Text("次週\n工作\n計畫")
                 .font(.caption.bold())
+                .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 60)
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserDefaults.standard.string(forKey: "nextWeekPlan") ?? "下週計畫")")
                 .font(.caption2)
+                .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 60, alignment: .leading)
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
                 .offset(x: -8)
         }
         .padding(0)
@@ -327,15 +348,17 @@ extension ContentView {
         HStack {
             Text("建議\n以及\n需要\n協助\n事項")
                 .font(.caption.bold())
+                .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 80)
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserDefaults.standard.string(forKey: "suggestion") ?? "無")")
                 .font(.caption2)
+                .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 80, alignment: .leading)
                 .padding(6)
-                .overlay(Rectangle().stroke(lineWidth: 1))
+                .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
                 .offset(x: -8)
         }
         .padding(0)

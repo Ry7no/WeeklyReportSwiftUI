@@ -89,8 +89,6 @@ struct EditView: View {
         
     }
     
-    //    @Environment(\.presentationMode) var presentationMode
-    
     var body: some View {
         
         
@@ -776,7 +774,8 @@ struct EditView: View {
                     })
                     {
                         Image(systemName: "delete.left")
-                            .foregroundColor(Color(UIColor.opaqueSeparator))
+                            .foregroundColor(Color(uiColor: .systemGray2))
+//                            .foregroundColor(Color(UIColor.opaqueSeparator))
                     }
                     .padding(.trailing, 8)
                 }
@@ -796,7 +795,8 @@ struct EditView: View {
                     })
                     {
                         Image(systemName: "multiply.square")
-                            .foregroundColor(Color(UIColor.opaqueSeparator))
+                            .foregroundColor(Color(uiColor: .systemGray2))
+//                            .foregroundColor(Color(UIColor.opaqueSeparator))
                     }
                     .padding([.bottom], 2)
                 }
