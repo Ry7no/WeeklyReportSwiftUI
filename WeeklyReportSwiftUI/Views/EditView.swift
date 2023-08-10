@@ -7,15 +7,22 @@
 
 import SwiftUI
 import UIKit
+import AVFoundation
+import Speech
 
 struct EditView: View {
     
     @ObservedObject var reportViewModel = ReportViewModel()
     
-    @State private var userEmail: String
+    @State private var userToEmail: String
+    @State private var userCcEmail: String
+    @State private var userBccEmail: String
     @State private var userEmailTitle: String
     @State private var userEmailContent: String
     @State private var userEmailSignature: String
+    
+    @State private var userEmailAppendText: String
+    @State private var isAppended: Bool = false
     
     @State private var userName: String
     @State private var userTitle: String
@@ -44,14 +51,32 @@ struct EditView: View {
     
     @State private var offsetForKeyboard: CGFloat = 0.0
     
+
+    let speechRecognizerTW = SFSpeechRecognizer(locale: Locale.init(identifier: "zh_TW"))!
+    let audioEngine = AVAudioEngine()
+    @State var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
+    @State var recognitionTask: SFSpeechRecognitionTask?
+    @State var isSpeechButtonEnabled: Bool = false
+
     init(){
         
-        UserDefaults.standard.set("陳俊宏-工作週報_111-06-13_to_111-06-17", forKey: "outputFileName")
+//        UserDefaults.standard.set("陳俊宏-工作週報_111-06-13_to_111-06-17", forKey: "outputFileName")
         isHiddenViews = UserDefaults.standard.bool(forKey: "isHiddenViews")
-        userEmail = UserDefaults.standard.string(forKey: "userEmail") ?? "defaultUser@email.com"
-        userEmailTitle = UserDefaults.standard.string(forKey: "userEmailTitle") ?? UserDefaults.standard.string(forKey: "outputFileName")!
+        isAppended = UserDefaults.standard.bool(forKey: "isAppended")
+        userToEmail = UserDefaults.standard.string(forKey: "userToEmail") ?? "defaultToUser@email.com"
+        userCcEmail = UserDefaults.standard.string(forKey: "userCcEmail") ?? "defaultCcUser@email.com"
+        userBccEmail = UserDefaults.standard.string(forKey: "userBccEmail") ?? "defaultBccUser@email.com"
+        
+        if UserDefaults.standard.string(forKey: "outputFileName") == "" || UserDefaults.standard.string(forKey: "outputFileName") == nil {
+            UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
+        }
+        
+        userEmailTitle = UserDefaults.standard.string(forKey: "outputFileName")!
+//        userEmailTitle = UserDefaults.standard.string(forKey: "userEmailTitle") ?? UserDefaults.standard.string(forKey: "outputFileName")!
         userEmailContent = UserDefaults.standard.string(forKey: "userEmailContent") ?? " "
         userEmailSignature = UserDefaults.standard.string(forKey: "userEmailSignature") ?? " "
+        userEmailAppendText = ""
+        UserDefaults.standard.set("", forKey: "userEmailAppendText")
         
         userName = UserDefaults.standard.string(forKey: "userName") ?? "你的名字"
         userTitle = UserDefaults.standard.string(forKey: "userTitle") ?? "你的職稱"
@@ -73,15 +98,7 @@ struct EditView: View {
         suggestion = UserDefaults.standard.string(forKey: "suggestion") ?? "建議與協助事項"
         
         reportViewModel.dateInitManager()
-        
-        UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
-        
-        if UserDefaults.standard.string(forKey: "userEmailTitle") != "" {
 
-        } else {
-            UserDefaults.standard.set(UserDefaults.standard.string(forKey: "outputFileName")! ,forKey: "userEmailTitle")
-            userEmailTitle = UserDefaults.standard.string(forKey: "userEmailTitle")!
-        }
         
         userEmailContent = UserDefaults.standard.string(forKey: "userEmailContent") ?? UserDefaults.standard.string(forKey: "outputFileName")!
         userEmailSignature = UserDefaults.standard.string(forKey: "userEmailSignature") ?? " "
@@ -92,7 +109,7 @@ struct EditView: View {
     var body: some View {
         
         
-        ZStack{
+        ZStack {
             
             ScrollView (.vertical, showsIndicators: false, content: {
                 
@@ -139,13 +156,49 @@ struct EditView: View {
                                     .font(.caption)
                                     .foregroundColor(.brown.opacity(0.9))
                                 
-                                TextField("\(UserDefaults.standard.string(forKey: "userEmail") ?? "收件Email")", text: $userEmail).modifier(ClearButton(text: $userEmail))
+                                TextField("\(UserDefaults.standard.string(forKey: "userToEmail") ?? "收件Email")", text: $userToEmail).modifier(ClearButton(text: $userToEmail))
                                     .padding(.leading, 7)
                                     .frame(height: 40, alignment: .leading)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
-                                            .stroke(lineWidth: userEmail.isEmpty ? 2 : 1)
-                                            .foregroundColor(userEmail.isEmpty ? .red : .brown.opacity(0.9))
+                                            .stroke(lineWidth: userToEmail.isEmpty ? 2 : 1)
+                                            .foregroundColor(userToEmail.isEmpty ? .red : .brown.opacity(0.9))
+                                    )
+                                
+                            }
+                            .padding()
+                            
+                            VStack (alignment: .leading, spacing: 3) {
+                                
+                                Text("請輸入副本Email (不需要直接清空即可)：")
+                                    .font(.caption)
+                                    .foregroundColor(.brown.opacity(0.9))
+                                
+                                TextField("\(UserDefaults.standard.string(forKey: "userCcEmail") ?? "副本Email")", text: $userCcEmail).modifier(ClearButton(text: $userCcEmail))
+                                    .padding(.leading, 7)
+                                    .frame(height: 40, alignment: .leading)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(lineWidth: userCcEmail.isEmpty ? 2 : 1)
+                                            .foregroundColor(userCcEmail.isEmpty ? .red : .brown.opacity(0.9))
+                                    )
+                                
+                            }
+                            .padding()
+                            
+                            VStack (alignment: .leading, spacing: 3) {
+                                
+                                Text("請輸入密件副本Email (不需要直接清空即可)：")
+                                    .font(.caption)
+                                    .foregroundColor(.brown.opacity(0.9))
+                                
+                                TextField("\(UserDefaults.standard.string(forKey: "userBccEmail") ?? "密件副本Email")", text: $userBccEmail).modifier(ClearButton(text: $userBccEmail))
+                                    .padding(.leading, 7)
+                                    .frame(height: 40, alignment: .leading)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(lineWidth: userBccEmail.isEmpty ? 2 : 1)
+                                            .foregroundColor(userBccEmail.isEmpty ? .red : .brown.opacity(0.9))
                                     )
                                 
                             }
@@ -166,7 +219,7 @@ struct EditView: View {
                                             .stroke(lineWidth: userEmailTitle.isEmpty ? 2 : 1)
                                             .foregroundColor(userEmailTitle.isEmpty ? .red : .brown.opacity(0.9))
                                     )
-                                    .id(1)
+                                    
                                 
                             }
                             .padding()
@@ -191,6 +244,12 @@ struct EditView: View {
                                         .stroke(lineWidth: userEmailContent.isEmpty ? 2 : 1)
                                         .foregroundColor(userEmailContent.isEmpty ? .red : .brown.opacity(0.9))
                                     )
+                                    .id(1)
+                                    .onTapGesture {
+                                        withAnimation(.spring()){
+                                            scrollProxy.scrollTo(2, anchor: .bottom)
+                                        }
+                                    }
                                 
                             }
                             .padding()
@@ -215,14 +274,30 @@ struct EditView: View {
                                         .stroke(lineWidth: userEmailSignature.isEmpty ? 2 : 1)
                                         .foregroundColor(userEmailSignature.isEmpty ? .red : .brown.opacity(0.9))
                                     )
+                                    .id(2)
                                     .onTapGesture {
                                         withAnimation(.spring()){
-                                            scrollProxy.scrollTo(1, anchor: .top)
+                                            scrollProxy.scrollTo(3, anchor: .bottom)
                                         }
                                     }
                                 
                             }
                             .padding()
+                            
+                            VStack(alignment: .leading, spacing: 3) {
+                                
+                                Text("請選擇是否在郵件中附上純文字：")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.caption)
+                                    .foregroundColor(.brown.opacity(0.9))
+                                
+                                Toggle("", isOn: $isAppended)
+                                    .labelsHidden()
+                                    .padding()
+                                    .offset(x: -15)
+                            }
+                            .padding()
+                            .id(3)
                             
                         }
                         
@@ -243,7 +318,7 @@ struct EditView: View {
                         Text("請輸入姓名：")
                             .font(.caption)
                             .foregroundColor(.teal)
-                            .id(2)
+                        
                         
                         TextField("\(UserDefaults.standard.string(forKey: "userName") ?? "你的名字")", text: $userName).modifier(ClearButton(text: $userName))
                             .padding(.leading, 7)
@@ -254,6 +329,12 @@ struct EditView: View {
                                     .foregroundColor(userName.isEmpty ? .red : .teal)
                             )
                             .ignoresSafeArea(.keyboard, edges: .bottom)
+                            .id(4)
+                            .onTapGesture {
+                                withAnimation(.spring()){
+                                    scrollProxy.scrollTo(4, anchor: .bottom)
+                                }
+                            }
                             .overlay(
                                 
                                 GeometryReader{proxy -> Color in
@@ -292,6 +373,12 @@ struct EditView: View {
                                     .foregroundColor(userTitle.isEmpty ? .red : .teal)
                             )
                             .ignoresSafeArea(.keyboard, edges: .bottom)
+                            .id(5)
+                            .onTapGesture {
+                                withAnimation(.spring()){
+                                    scrollProxy.scrollTo(6, anchor: .bottom)
+                                }
+                            }
                         
                     }
                     .padding()
@@ -311,6 +398,12 @@ struct EditView: View {
                                         .stroke(lineWidth: startMonth.isEmpty ? 2 : 1)
                                         .foregroundColor(startMonth.isEmpty ? .red : .teal)
                                 )
+                                .id(6)
+//                                .onTapGesture {
+//                                    withAnimation(.spring()){
+//                                        scrollProxy.scrollTo(5, anchor: .bottom)
+//                                    }
+//                                }
                         }
                         .padding()
                         
@@ -320,7 +413,7 @@ struct EditView: View {
                             Text("請輸入開始日 (數字)：")
                                 .font(.caption)
                                 .foregroundColor(.teal)
-                                .id(6)
+
                             
                             TextField("\(UserDefaults.standard.string(forKey: "startDay") ?? "開始日")", text: $startDay).modifier(ClearButton(text: $startDay))
                                 .padding(.leading, 7)
@@ -330,6 +423,7 @@ struct EditView: View {
                                         .stroke(lineWidth: startDay.isEmpty ? 2 : 1)
                                         .foregroundColor(startDay.isEmpty ? .red : .teal)
                                 )
+
                         }
                         .padding()
                     }
@@ -357,16 +451,22 @@ struct EditView: View {
                                 .stroke(lineWidth: missions.isEmpty ? 2 : 1)
                                 .foregroundColor(missions.isEmpty ? .red : .teal)
                             )
+                            .id(7)
                             .onTapGesture {
                                 withAnimation(.spring()){
-                                    if isHiddenViews == false {
-                                        scrollProxy.scrollTo(2, anchor: .bottom)
-                                    } else {
-                                        scrollProxy.scrollTo(6, anchor: .bottom)
-                                    }
-                                    
+                                    scrollProxy.scrollTo(8, anchor: .bottom)
                                 }
                             }
+//                            .onTapGesture {
+//                                withAnimation(.spring()){
+//                                    if isHiddenViews == false {
+//                                        scrollProxy.scrollTo(2, anchor: .bottom)
+//                                    } else {
+//                                        scrollProxy.scrollTo(6, anchor: .bottom)
+//                                    }
+//
+//                                }
+//                            }
                         
                     }
                     .padding()
@@ -392,6 +492,13 @@ struct EditView: View {
                                             .foregroundColor(mondayMorningDetails.isEmpty ? .red : .teal)
                                     )
                                     .ignoresSafeArea(.keyboard, edges: .bottom)
+                                    .id(8)
+
+//                                    .onTapGesture {
+//                                        withAnimation(.spring()){
+//                                            scrollProxy.scrollTo(8, anchor: .bottom)
+//                                        }
+//                                    }
                             }
                             
                             HStack {
@@ -407,6 +514,13 @@ struct EditView: View {
                                             .foregroundColor(mondayAfternoonDetails.isEmpty ? .red : .teal)
                                     )
                                     .ignoresSafeArea(.keyboard, edges: .bottom)
+
+//                                    .id(9)
+//                                    .onTapGesture {
+//                                        withAnimation(.spring()){
+//                                            scrollProxy.scrollTo(9, anchor: .bottom)
+//                                        }
+//                                    }
                             }
                         }
                         .padding()
@@ -430,6 +544,13 @@ struct EditView: View {
                                             .foregroundColor(tuesdayMorningDetails.isEmpty ? .red : .teal)
                                     )
                                     .ignoresSafeArea(.keyboard, edges: .bottom)
+
+//                                    .id(10)
+//                                    .onTapGesture {
+//                                        withAnimation(.spring()){
+//                                            scrollProxy.scrollTo(10, anchor: .bottom)
+//                                        }
+//                                    }
                                 
                             }
                             
@@ -446,6 +567,13 @@ struct EditView: View {
                                             .foregroundColor(tuesdayAfternoonDetails.isEmpty ? .red : .teal)
                                     )
                                     .ignoresSafeArea(.keyboard, edges: .bottom)
+
+//                                    .id(11)
+//                                    .onTapGesture {
+//                                        withAnimation(.spring()){
+//                                            scrollProxy.scrollTo(11, anchor: .bottom)
+//                                        }
+//                                    }
                             }
                             
                         }
@@ -470,6 +598,12 @@ struct EditView: View {
                                             .foregroundColor(wednesdayMorningDetails.isEmpty ? .red : .teal)
                                     )
                                     .ignoresSafeArea(.keyboard, edges: .bottom)
+//                                    .id(12)
+//                                    .onTapGesture {
+//                                        withAnimation(.spring()){
+//                                            scrollProxy.scrollTo(12, anchor: .bottom)
+//                                        }
+//                                    }
                             }
                             
                             HStack {
@@ -485,6 +619,12 @@ struct EditView: View {
                                             .foregroundColor(wednesdayAfternoonDetails.isEmpty ? .red : .teal)
                                     )
                                     .ignoresSafeArea(.keyboard, edges: .bottom)
+//                                    .id(13)
+//                                    .onTapGesture {
+//                                        withAnimation(.spring()){
+//                                            scrollProxy.scrollTo(13, anchor: .bottom)
+//                                        }
+//                                    }
                             }
                             
                         }
@@ -509,6 +649,12 @@ struct EditView: View {
                                             .foregroundColor(thursdayMorningDetails.isEmpty ? .red : .teal)
                                     )
                                     .ignoresSafeArea(.keyboard, edges: .bottom)
+//                                    .id(14)
+//                                    .onTapGesture {
+//                                        withAnimation(.spring()){
+//                                            scrollProxy.scrollTo(14, anchor: .bottom)
+//                                        }
+//                                    }
                             }
                             
                             HStack {
@@ -524,6 +670,12 @@ struct EditView: View {
                                             .foregroundColor(thursdayAfternoonDetails.isEmpty ? .red : .teal)
                                     )
                                     .ignoresSafeArea(.keyboard, edges: .bottom)
+//                                    .id(15)
+//                                    .onTapGesture {
+//                                        withAnimation(.spring()){
+//                                            scrollProxy.scrollTo(15, anchor: .bottom)
+//                                        }
+//                                    }
                             }
                             
                         }
@@ -548,6 +700,12 @@ struct EditView: View {
                                             .foregroundColor(fridayMorningDetails.isEmpty ? .red : .teal)
                                     )
                                     .ignoresSafeArea(.keyboard, edges: .bottom)
+//                                    .id(16)
+//                                    .onTapGesture {
+//                                        withAnimation(.spring()){
+//                                            scrollProxy.scrollTo(16, anchor: .bottom)
+//                                        }
+//                                    }
                             }
                             
                             HStack {
@@ -563,7 +721,12 @@ struct EditView: View {
                                             .foregroundColor(fridayAfternoonDetails.isEmpty ? .red : .teal)
                                     )
                                     .ignoresSafeArea(.keyboard, edges: .bottom)
-                                    .id(3)
+//                                    .id(17)
+//                                    .onTapGesture {
+//                                        withAnimation(.spring()){
+//                                            scrollProxy.scrollTo(17, anchor: .bottom)
+//                                        }
+//                                    }
                             }
                             
                         }
@@ -594,10 +757,10 @@ struct EditView: View {
                                     .foregroundColor(thisWeekPlan.isEmpty ? .red : .teal)
                                     .ignoresSafeArea(.keyboard, edges: .bottom)
                                 )
-                                .id(4)
+                                .id(18)
                                 .onTapGesture {
                                     withAnimation(.spring()){
-                                        scrollProxy.scrollTo(3, anchor: .bottom)
+                                        scrollProxy.scrollTo(18, anchor: .bottom)
                                     }
                                 }
                         }
@@ -623,10 +786,10 @@ struct EditView: View {
                                     .stroke(lineWidth: nextWeekPlan.isEmpty ? 2 : 1)
                                     .foregroundColor(nextWeekPlan.isEmpty ? .red : .teal)
                                 )
-                                .id(5)
+                                .id(19)
                                 .onTapGesture {
                                     withAnimation(.spring()){
-                                        scrollProxy.scrollTo(4, anchor: .bottom)
+                                        scrollProxy.scrollTo(19, anchor: .bottom)
                                     }
                                 }
                             
@@ -653,9 +816,10 @@ struct EditView: View {
                                     .stroke(lineWidth: suggestion.isEmpty ? 2 : 1)
                                     .foregroundColor(suggestion.isEmpty ? .red : .teal)
                                 )
+                                .id(20)
                                 .onTapGesture {
                                     withAnimation(.spring()){
-                                        scrollProxy.scrollTo(5, anchor: .bottom)
+                                        scrollProxy.scrollTo(20, anchor: .bottom)
                                     }
                                 }
                             
@@ -760,6 +924,9 @@ struct EditView: View {
                 CheckedView()
             }
         }
+        .onAppear {
+            requestPermission()
+        }
     }
     
     struct ClearButton: ViewModifier {
@@ -806,11 +973,22 @@ struct EditView: View {
     
     func saveChanges(){
         
-        UserDefaults.standard.set(userEmail, forKey: "userEmail")
-        if userEmailTitle == "" {
-            userEmailTitle = UserDefaults.standard.string(forKey: "outputFileName")!
+        UserDefaults.standard.set(isAppended, forKey: "isAppended")
+        
+        DispatchQueue.main.async {
+            saveText()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                saveText()
+                UserDefaults.standard.set(userEmailAppendText, forKey: "userEmailAppendText")
+            }
         }
-        UserDefaults.standard.set(userEmailTitle, forKey: "userEmailTitle")
+        
+        UserDefaults.standard.set(userToEmail, forKey: "userToEmail")
+        UserDefaults.standard.set(userCcEmail, forKey: "userCcEmail")
+        UserDefaults.standard.set(userBccEmail, forKey: "userBccEmail")
+        
+        
+//        UserDefaults.standard.set(userEmailTitle, forKey: "userEmailTitle")
         UserDefaults.standard.set(userEmailContent, forKey: "userEmailContent")
         UserDefaults.standard.set(userEmailSignature, forKey: "userEmailSignature")
         
@@ -819,7 +997,7 @@ struct EditView: View {
         UserDefaults.standard.set(startMonth, forKey: "startMonth")
         UserDefaults.standard.set(startDay, forKey: "startDay")
         UserDefaults.standard.set(missions ,forKey: "missions")
-        
+
         UserDefaults.standard.set(mondayMorningDetails ,forKey: "mondayMorningDetails")
         UserDefaults.standard.set(mondayAfternoonDetails ,forKey: "mondayAfternoonDetails")
         UserDefaults.standard.set(tuesdayMorningDetails ,forKey: "tuesdayMorningDetails")
@@ -834,11 +1012,111 @@ struct EditView: View {
         UserDefaults.standard.set(thisWeekPlan ,forKey: "thisWeekPlan")
         UserDefaults.standard.set(nextWeekPlan ,forKey: "nextWeekPlan")
         UserDefaults.standard.set(suggestion ,forKey: "suggestion")
-        
-        UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
-        
+
         reportViewModel.dateInitManager()
         
+        UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
+        userEmailTitle = UserDefaults.standard.string(forKey: "outputFileName")!
+        
+    }
+    
+    func saveText() {
+        
+        isAppended.toggle()
+        
+        if isAppended {
+            
+            userEmailAppendText = "<br/><hr><br/>姓名：\(userName)<br/>職稱：\(userTitle)<br />期間：\(UserManager.shared.startDateString ?? "111/06/13") ~ \(UserManager.shared.endDateString ?? "111/06/17")<br/><hr style=\"border-style: dotted;\" />主管交辦任務：<br/>\(missions)<br /><hr style=\"border-style: dotted;\" />細部摘要(一)：\(UserManager.shared.mondayString ?? "06/13")<br/>早：\(UserDefaults.standard.string(forKey: "mondayMorningDetails") ?? "")<br/>午：\(UserDefaults.standard.string(forKey: "mondayAfternoonDetails") ?? "")<p/>細部摘要(二)：\(UserManager.shared.tuesdayString ?? "06/13")<br/>早：\(UserDefaults.standard.string(forKey: "tuesdayMorningDetails") ?? "")<br/>午：\(UserDefaults.standard.string(forKey: "tuesdayAfternoonDetails") ?? "")<p/>細部摘要(三)：\(UserManager.shared.wednesdayString ?? "06/13")<br/>早：\(UserDefaults.standard.string(forKey: "wednesdayMorningDetails") ?? "")<br/>午：\(UserDefaults.standard.string(forKey: "wednesdayAfternoonDetails") ?? "")<p/>細部摘要(四)：\(UserManager.shared.thursdayString ?? "06/13")<br/>早：\(UserDefaults.standard.string(forKey: "thursdayMorningDetails") ?? "")<br/>午：\(UserDefaults.standard.string(forKey: "thursdayAfternoonDetails") ?? "")<p/>細部摘要(五)：\(UserManager.shared.fridayString ?? "06/13")<br/>早：\(UserDefaults.standard.string(forKey: "fridayMorningDetails") ?? "")<br/>午：\(UserDefaults.standard.string(forKey: "fridayAfternoonDetails") ?? "")<hr style=\"border-style: dotted;\" />本週工作摘要：<br/>\(thisWeekPlan)<br/><hr style=\"border-style: dotted;\" />下週工作計畫：<br/>\(nextWeekPlan)<br/><hr style=\"border-style: dotted;\" />建議協助事項：<br/>\(suggestion)<br/><hr style=\"border-style: dotted;\" />"
+            
+        } else {
+            userEmailAppendText = ""
+        }
+    }
+    
+    func requestPermission() {
+        
+        SFSpeechRecognizer.requestAuthorization { (authStatus) in
+            
+            switch authStatus {
+            case .authorized:
+                isSpeechButtonEnabled = true
+                
+            case .denied:
+                isSpeechButtonEnabled = false
+                print("用戶拒絕接受語音識別")
+                
+            case .restricted:
+                isSpeechButtonEnabled = false
+                print("語音識別功能沒有經過認可")
+                
+            case .notDetermined:
+                isSpeechButtonEnabled = false
+                print("當前設備不能語音識別")
+                
+            @unknown default:
+                print("錯誤")
+            }
+        }
+    }
+    
+    func startRecording(message: String) -> String {
+        
+        var inputString = ""
+        
+        if recognitionTask != nil {
+            recognitionTask?.cancel()
+            recognitionTask = nil
+        }
+
+        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+        
+        let inputNode = audioEngine.inputNode
+        
+        guard let recognitionRequest = recognitionRequest else {
+            fatalError("Unable to create an SFSpeechAudioBufferRecognitionRequest object")
+        }
+        
+        recognitionRequest.shouldReportPartialResults = true
+
+        recognitionTask = speechRecognizerTW.recognitionTask(with: recognitionRequest, resultHandler: { (result, error) in
+            
+            var isFinal = false
+
+            if result != nil {
+                
+                inputString = result?.bestTranscription.formattedString ?? ""
+                isFinal = (result?.isFinal)!
+                
+            }
+            
+            if error != nil || isFinal {
+                
+                self.audioEngine.stop()
+                inputNode.removeTap(onBus: 0)
+                
+                self.recognitionRequest = nil
+                self.recognitionTask = nil
+                isSpeechButtonEnabled = true
+
+            }
+        })
+        
+        let recordingFormat = inputNode.outputFormat(forBus: 0)
+        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer, when) in
+            self.recognitionRequest?.append(buffer)
+        }
+        
+        audioEngine.prepare()
+        
+        do {
+            try audioEngine.start()
+        } catch {
+            print("錯誤，audioEngine無法啟動。")
+        }
+        
+        
+        return message + inputString
+//        message = "說點什麼，我在聽！"
     }
 }
 
@@ -848,7 +1126,9 @@ extension EditView {
         
         Button {
             
-            UserDefaults.standard.set(userEmail, forKey: "userEmail")
+            UserDefaults.standard.set(userToEmail, forKey: "userToEmail")
+            UserDefaults.standard.set(userCcEmail, forKey: "userCcEmail")
+            UserDefaults.standard.set(userBccEmail, forKey: "userBccEmail")
             UserDefaults.standard.set(userName, forKey: "userName")
             UserDefaults.standard.set(userTitle, forKey: "userTitle")
             UserDefaults.standard.set(startMonth, forKey: "startMonth")

@@ -85,12 +85,12 @@ class ReportViewModel: ObservableObject {
     }
     
     func dateInitManager() {
-        
-        let dateStr = "2022/\(UserDefaults.standard.string(forKey: "startMonth") ?? "6")/\(UserDefaults.standard.string(forKey: "startDay") ?? "13")"
-        let startDateString = dateToString(date: stringToDate(dateStr: dateStr))
-        let endDateString = dateToString(date: Calendar.current.date(byAdding: .day, value: 4, to: stringToDate(dateStr: dateStr))!)
-        let startDateFile = dateToStringFileName(date: stringToDate(dateStr: dateStr))
-        let endDateFile = dateToStringFileName(date: Calendar.current.date(byAdding: .day, value: 4, to: stringToDate(dateStr: dateStr))!)
+
+        let dateStr = "\(dateToStringYYY(date: Date()))/\(UserDefaults.standard.string(forKey: "startMonth") ?? "6")/\(UserDefaults.standard.string(forKey: "startDay") ?? "13")"
+        let startDateString = dateToString(date: stringToDateYYY(dateStr: dateStr))
+        let endDateString = dateToString(date: Calendar.current.date(byAdding: .day, value: 4, to: stringToDateYYY(dateStr: dateStr))!)
+        let startDateFile = dateToStringFileName(date: stringToDateYYY(dateStr: dateStr))
+        let endDateFile = dateToStringFileName(date: Calendar.current.date(byAdding: .day, value: 4, to: stringToDateYYY(dateStr: dateStr))!)
         
         UserManager.shared.startDateString = startDateString
         UserManager.shared.endDateString = endDateString
@@ -123,6 +123,16 @@ class ReportViewModel: ObservableObject {
         return date
     }
     
+    func stringToDateYYY(dateStr: String) -> Date {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyy/MM/dd"
+        dateFormatter.locale = Locale(identifier: "zh_Hant_TW") // 設定地區(台灣)
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Taipei") // 設定時區(台灣)
+        dateFormatter.calendar = Calendar(identifier: Calendar.Identifier.republicOfChina)
+        guard let date = dateFormatter.date(from: dateStr) else { return Date() }
+        return date
+    }
+    
     func dateToStringFileName(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyy-MM-dd"
@@ -140,6 +150,34 @@ class ReportViewModel: ObservableObject {
         dateFormatter.locale = Locale(identifier: "zh_Hant_TW") // 設定地區(台灣)
         dateFormatter.timeZone = TimeZone(identifier: "Asia/Taipei") // 設定時區(台灣)
         dateFormatter.calendar = Calendar(identifier: Calendar.Identifier.republicOfChina)
+        
+        let string = dateFormatter.string(from: date)
+        return string
+    }
+    
+    func dateToStringYYY(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyy"
+        dateFormatter.locale = Locale(identifier: "zh_Hant_TW") // 設定地區(台灣)
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Taipei") // 設定時區(台灣)
+        dateFormatter.calendar = Calendar(identifier: Calendar.Identifier.republicOfChina)
+        
+        let string = dateFormatter.string(from: date)
+        return string
+    }
+    
+    func dateToStringYYYII(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy"
+        var int = Int(dateFormatter.string(from: date))
+        var string = String((int ?? 2020) - 1911)
+        
+        return string
+    }
+    
+    func dateToStringYYYY(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYY"
         
         let string = dateFormatter.string(from: date)
         return string

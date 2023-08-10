@@ -9,7 +9,6 @@ import SwiftUI
 import PDFKit
 import MessageUI
 
-
 struct ContentView: View {
     
     @ObservedObject var reportViewModel = ReportViewModel()
@@ -23,12 +22,20 @@ struct ContentView: View {
     @State var fileName = "陳俊宏-工作週報_111-06-13_to_111-06-17"
     @State var isShowAlert = false
     
+    @State var isRefresh: Bool = false
+    
     @State var PDFUrl: URL?
     @State var isShowingShareSheet = false
    
+    var isMini: Bool = false
     
     init(){
         reportViewModel.dateInitManager()
+        
+        switch UIDevice().type {
+        case .iPhone12Mini, .iPhone13Mini: isMini = true
+        default: isMini = false
+        }
     }
     
     var body: some View {
@@ -71,6 +78,7 @@ extension ContentView {
             
         } label: {
             Text("工作週報")
+                .font(.system(size: 16).bold())
                 .foregroundColor(.black)
                 .bold()
         }
@@ -96,7 +104,7 @@ extension ContentView {
             
             Button("寄送ＰＤＦ") {
                 
-                UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
+//                UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
                 
                 reportViewModel.clearAllFile()
                 
@@ -151,14 +159,14 @@ extension ContentView {
         HStack {
             
             Text("姓名")
-                .font(.caption.bold())
+                .font(.system(size: 10.5).bold())
                 .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 16) // 14.5
                 .padding(6)
                 .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserDefaults.standard.string(forKey: "userName") ?? "")")
-                .font(.caption2)
+                .font(.system(size: 10))
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 16, alignment: .leading)
                 .padding(6)
@@ -175,14 +183,14 @@ extension ContentView {
         HStack {
             
             Text("職稱")
-                .font(.caption.bold())
+                .font(.system(size: 10.5).bold())
                 .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 16)
                 .padding(6)
                 .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserDefaults.standard.string(forKey: "userTitle") ?? "")")
-                .font(.caption2)
+                .font(.system(size: 10))
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 16, alignment: .leading)
                 .padding(6)
@@ -199,14 +207,14 @@ extension ContentView {
         HStack {
             
             Text("期間")
-                .font(.caption.bold())
+                .font(.system(size: 10.5).bold())
                 .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 16)
                 .padding(6)
                 .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserManager.shared.startDateString ?? "111/06/13") ~ \(UserManager.shared.endDateString ?? "111/06/17")")
-                .font(.caption2)
+                .font(.system(size: 10))
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 16, alignment: .leading)
                 .padding(6)
@@ -222,14 +230,14 @@ extension ContentView {
         
         HStack {
             Text("主管\n交辦\n任務")
-                .font(.caption.bold())
+                .font(.system(size: 10.5).bold())
                 .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 60)// 46.5
                 .padding(6)
                 .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserDefaults.standard.string(forKey: "missions") ?? "")")
-                .font(.caption2)
+                .font(.system(size: 10))
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 60, alignment: .leading)
                 .padding(6)
@@ -244,7 +252,7 @@ extension ContentView {
         
         HStack {
             Text("本\n週\n工\n作\n細\n部\n摘\n要")
-                .font(.caption.bold())
+                .font(.system(size: 10.5).bold())
                 .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 288)
                 .padding(6)
@@ -252,7 +260,7 @@ extension ContentView {
             
             VStack (spacing: 0){
                 Text("一、\(UserManager.shared.mondayString ?? "06/13")\n早：\(UserDefaults.standard.string(forKey: "mondayMorningDetails") ?? "")\n午：\(UserDefaults.standard.string(forKey: "mondayAfternoonDetails") ?? "")")
-                    .font(.caption2)
+                    .font(.system(size: 10))
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity, maxHeight: 50, alignment: .leading)
                     .padding(5)
@@ -260,7 +268,7 @@ extension ContentView {
                 .offset(x: -8)
                 
                 Text("二、\(UserManager.shared.tuesdayString ?? "06/14")\n早：\(UserDefaults.standard.string(forKey: "tuesdayMorningDetails") ?? "")\n午：\(UserDefaults.standard.string(forKey: "tuesdayAfternoonDetails") ?? "")")
-                    .font(.caption2)
+                    .font(.system(size: 10))
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity, maxHeight: 50, alignment: .leading)
                     .padding(5)
@@ -268,7 +276,7 @@ extension ContentView {
                 .offset(x: -8)
                 
                 Text("三、\(UserManager.shared.wednesdayString ?? "06/15")\n早：\(UserDefaults.standard.string(forKey: "wednesdayMorningDetails") ?? "")\n午：\(UserDefaults.standard.string(forKey: "wednesdayAfternoonDetails") ?? "")")
-                    .font(.caption2)
+                    .font(.system(size: 10))
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity, maxHeight: 50, alignment: .leading)
                     .padding(5)
@@ -276,7 +284,7 @@ extension ContentView {
                 .offset(x: -8)
                 
                 Text("四、\(UserManager.shared.thursdayString ?? "06/16")\n早：\(UserDefaults.standard.string(forKey: "thursdayMorningDetails") ?? "")\n午：\(UserDefaults.standard.string(forKey: "thursdayAfternoonDetails") ?? "")")
-                    .font(.caption2)
+                    .font(.system(size: 10))
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity, maxHeight: 50, alignment: .leading)
                     .padding(5)
@@ -284,7 +292,7 @@ extension ContentView {
                 .offset(x: -8)
                 
                 Text("五、\(UserManager.shared.fridayString ?? "06/17")\n早：\(UserDefaults.standard.string(forKey: "fridayMorningDetails") ?? "")\n午：\(UserDefaults.standard.string(forKey: "fridayAfternoonDetails") ?? "")")
-                    .font(.caption2)
+                    .font(.system(size: 10))
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity, maxHeight: 50, alignment: .leading)
                     .padding(5)
@@ -301,14 +309,14 @@ extension ContentView {
         
         HStack {
             Text("本週\n工作\n摘要")
-                .font(.caption.bold())
+                .font(.system(size: 10.5).bold())
                 .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 60)
                 .padding(6)
                 .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserDefaults.standard.string(forKey: "thisWeekPlan") ?? "本週計畫")")
-                .font(.caption2)
+                .font(.system(size: 10))
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 60, alignment: .leading)
                 .padding(6)
@@ -324,14 +332,14 @@ extension ContentView {
         
         HStack {
             Text("次週\n工作\n計畫")
-                .font(.caption.bold())
+                .font(.system(size: 10.5).bold())
                 .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 60)
                 .padding(6)
                 .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserDefaults.standard.string(forKey: "nextWeekPlan") ?? "下週計畫")")
-                .font(.caption2)
+                .font(.system(size: 10))
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 60, alignment: .leading)
                 .padding(6)
@@ -347,14 +355,14 @@ extension ContentView {
         
         HStack {
             Text("建議\n以及\n需要\n協助\n事項")
-                .font(.caption.bold())
+                .font(.system(size: 10.5).bold())
                 .foregroundColor(.black)
                 .frame(maxWidth: 25, maxHeight: 80)
                 .padding(6)
                 .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
             Text("\(UserDefaults.standard.string(forKey: "suggestion") ?? "無")")
-                .font(.caption2)
+                .font(.system(size: 10))
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 80, alignment: .leading)
                 .padding(6)
@@ -439,19 +447,30 @@ struct MailView: UIViewControllerRepresentable {
         
         let urlString = "<privateurl>"
         let url = URL(string: urlString)
-        let userEmail = UserDefaults.standard.string(forKey: "userEmail") ?? "defaultUser@email.com"
-        var userEmailTitle = UserDefaults.standard.string(forKey: "userEmailTitle")!
+        let userToEmail = UserDefaults.standard.string(forKey: "userToEmail") ?? "defaultToUser@email.com"
+        let userCcEmail = UserDefaults.standard.string(forKey: "userCcEmail") ?? ""
+        let userBccEmail = UserDefaults.standard.string(forKey: "userBccEmail") ?? ""
+        var userEmailTitle = outputFileName
         var userEmailContent = UserDefaults.standard.string(forKey: "userEmailContent")!
         var userEmailSignature = UserDefaults.standard.string(forKey: "userEmailSignature")!
+        var userEmailAppendText = UserDefaults.standard.string(forKey: "userEmailAppendText") ?? ""
 
         let vc = MFMailComposeViewController()
         vc.mailComposeDelegate = context.coordinator
-        vc.setToRecipients(["\(userEmail)"])
+        vc.setToRecipients(["\(userToEmail)"])
+        
+        if userCcEmail != "" {
+            vc.setCcRecipients(["\(userCcEmail)"])
+        }
+        
+        if userBccEmail != "" {
+            vc.setBccRecipients(["\(userBccEmail)"])
+        }
+
         vc.setSubject("\(userEmailTitle)")
-        vc.setMessageBody("\(userEmailContent)\n<hr>\n\(userEmailSignature)", isHTML: true)
+        vc.setMessageBody("\(userEmailContent)\n<hr>\n\(userEmailSignature)\(userEmailAppendText)", isHTML: true)
         vc.reloadInputViews()
     
-        
         let docDirectory = getDocumentsDirectory()
         let filePath = docDirectory.appendingPathComponent("\(outputFileName).pdf")
 
