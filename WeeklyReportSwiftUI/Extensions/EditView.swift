@@ -12,6 +12,7 @@ import Speech
 
 struct EditView: View {
     
+//    @EnvironmentObject var reportViewModel: ReportViewModel
     @ObservedObject var reportViewModel = ReportViewModel()
     
     @State private var userToEmail: String
@@ -67,9 +68,9 @@ struct EditView: View {
         userCcEmail = UserDefaults.standard.string(forKey: "userCcEmail") ?? "defaultCcUser@email.com"
         userBccEmail = UserDefaults.standard.string(forKey: "userBccEmail") ?? "defaultBccUser@email.com"
         
-        if UserDefaults.standard.string(forKey: "outputFileName") == "" || UserDefaults.standard.string(forKey: "outputFileName") == nil {
-            UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
-        }
+//        if UserDefaults.standard.string(forKey: "outputFileName") == "" || UserDefaults.standard.string(forKey: "outputFileName") == nil {
+//            UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
+//        }
         
         userEmailTitle = UserDefaults.standard.string(forKey: "outputFileName")!
 //        userEmailTitle = UserDefaults.standard.string(forKey: "userEmailTitle") ?? UserDefaults.standard.string(forKey: "outputFileName")!
@@ -97,7 +98,7 @@ struct EditView: View {
         nextWeekPlan = UserDefaults.standard.string(forKey: "nextWeekPlan") ?? "下週計畫"
         suggestion = UserDefaults.standard.string(forKey: "suggestion") ?? "建議與協助事項"
         
-        reportViewModel.dateInitManager()
+//        reportViewModel.dateInitManager(initDate: Date())
 
         
         userEmailContent = UserDefaults.standard.string(forKey: "userEmailContent") ?? UserDefaults.standard.string(forKey: "outputFileName")!
@@ -115,7 +116,7 @@ struct EditView: View {
                 
                 ScrollViewReader {scrollProxy in
                     
-                    HStack{
+                    HStack {
                         
                         Text("郵件內容：")
                             .font(.title2).bold()
@@ -146,7 +147,7 @@ struct EditView: View {
                         }
                     }
                     
-                    Group{
+                    Group {
                         
                         if isHiddenViews == false {
                             
@@ -1013,10 +1014,10 @@ struct EditView: View {
         UserDefaults.standard.set(nextWeekPlan ,forKey: "nextWeekPlan")
         UserDefaults.standard.set(suggestion ,forKey: "suggestion")
 
-        reportViewModel.dateInitManager()
-        
-        UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
-        userEmailTitle = UserDefaults.standard.string(forKey: "outputFileName")!
+//        reportViewModel.dateInitManager(initDate: Date())
+//        
+//        UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
+//        userEmailTitle = UserDefaults.standard.string(forKey: "outputFileName")!
         
     }
     
@@ -1152,7 +1153,7 @@ extension EditView {
             
             UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
             
-            reportViewModel.dateInitManager()
+            reportViewModel.dateInitManager(initDate: Date())
             
             isShowSaveAlert.toggle()
             

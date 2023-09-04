@@ -50,7 +50,7 @@ class ReportViewModel: ObservableObject {
         let pageSize = CGSize(width: 595.2, height: 841.8)
         
         //View to render on PDF
-        let myUIHostingController = UIHostingController(rootView: ContentView())
+        let myUIHostingController = UIHostingController(rootView: MainReportView())
         myUIHostingController.view.frame = CGRect(origin: .zero, size: pageSize)
         
         
@@ -84,9 +84,11 @@ class ReportViewModel: ObservableObject {
         }
     }
     
-    func dateInitManager() {
+    func dateInitManager(initDate: Date) {
 
-        let dateStr = "\(dateToStringYYY(date: Date()))/\(UserDefaults.standard.string(forKey: "startMonth") ?? "6")/\(UserDefaults.standard.string(forKey: "startDay") ?? "13")"
+        let dateStr = initDate.toTaiwanDateString()
+        print("@ dateStr: \(dateStr)")
+
         let startDateString = dateToString(date: stringToDateYYY(dateStr: dateStr))
         let endDateString = dateToString(date: Calendar.current.date(byAdding: .day, value: 4, to: stringToDateYYY(dateStr: dateStr))!)
         let startDateFile = dateToStringFileName(date: stringToDateYYY(dateStr: dateStr))
@@ -113,6 +115,9 @@ class ReportViewModel: ObservableObject {
         UserManager.shared.wednesdayString = wednesdayString
         UserManager.shared.thursdayString = thursdayString
         UserManager.shared.fridayString = fridayString
+
+        UserDefaults.standard.set("\(UserDefaults.standard.string(forKey: "userName") ?? "姓名")-工作週報_\(UserManager.shared.startDateFile ?? "111-06-13")_to_\(UserManager.shared.endDateFile ?? "111-06-17")", forKey: "outputFileName")
+        
         
     }
     
@@ -169,8 +174,8 @@ class ReportViewModel: ObservableObject {
     func dateToStringYYYII(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy"
-        var int = Int(dateFormatter.string(from: date))
-        var string = String((int ?? 2020) - 1911)
+        let int = Int(dateFormatter.string(from: date))
+        let string = String((int ?? 2020) - 1911)
         
         return string
     }

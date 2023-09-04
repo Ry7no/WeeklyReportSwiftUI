@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FD80C93828616E0B003CAB02 /* WeeklyReportSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD80C93728616E0B003CAB02 /* WeeklyReportSwiftUIApp.swift */; };
-		FD80C93A28616E0B003CAB02 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD80C93928616E0B003CAB02 /* ContentView.swift */; };
+		FD80C93A28616E0B003CAB02 /* MainReportViewR1.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD80C93928616E0B003CAB02 /* MainReportViewR1.swift */; };
 		FD80C93C28616E0C003CAB02 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD80C93B28616E0C003CAB02 /* Assets.xcassets */; };
 		FD80C93F28616E0C003CAB02 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD80C93E28616E0C003CAB02 /* Preview Assets.xcassets */; };
 		FD80C94628617117003CAB02 /* ReportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD80C94528617117003CAB02 /* ReportViewModel.swift */; };
@@ -19,13 +19,32 @@
 		FD80C977286D5E85003CAB02 /* CheckedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD80C976286D5E85003CAB02 /* CheckedView.swift */; };
 		FD80C979286D5E8C003CAB02 /* HiddenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD80C978286D5E8C003CAB02 /* HiddenView.swift */; };
 		FD80C97B286D5E92003CAB02 /* Checked.json in Resources */ = {isa = PBXBuildFile; fileRef = FD80C97A286D5E92003CAB02 /* Checked.json */; };
+		FDB4BE5D2A84EEB5001ECB12 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE5C2A84EEB5001ECB12 /* HomeView.swift */; };
+		FDB4BE5F2A84F0C1001ECB12 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE5E2A84F0C1001ECB12 /* Task.swift */; };
+		FDB4BE612A84F395001ECB12 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE602A84F395001ECB12 /* Extensions.swift */; };
+		FDB4BE632A84F7B6001ECB12 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE622A84F7B5001ECB12 /* TaskManager.swift */; };
+		FDB4BE652A853662001ECB12 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE642A853662001ECB12 /* CalendarView.swift */; };
+		FDB4BE672A85367C001ECB12 /* DateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE662A85367C001ECB12 /* DateManager.swift */; };
+		FDB4BE692A85DB4D001ECB12 /* FloatingCloudsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE682A85DB4D001ECB12 /* FloatingCloudsView.swift */; };
+		FDB4BE6B2A86040F001ECB12 /* AddTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE6A2A86040F001ECB12 /* AddTaskView.swift */; };
+		FDB4BE6D2A860B0D001ECB12 /* CustomDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE6C2A860B0D001ECB12 /* CustomDatePicker.swift */; };
+		FDB4BE6F2A861C00001ECB12 /* EditListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE6E2A861C00001ECB12 /* EditListView.swift */; };
+		FDB4BE722A864288001ECB12 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FDB4BE712A864288001ECB12 /* IQKeyboardManagerSwift */; };
+		FDB4BE752A86429A001ECB12 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = FDB4BE742A86429A001ECB12 /* SQLite */; };
+		FDB4BE772A86580A001ECB12 /* SQLiteDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE762A86580A001ECB12 /* SQLiteDatabase.swift */; };
+		FDB4BE792A86581E001ECB12 /* SQLiteCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE782A86581E001ECB12 /* SQLiteCommands.swift */; };
+		FDB4BE7B2A871C79001ECB12 /* HUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE7A2A871C79001ECB12 /* HUDView.swift */; };
+		FDB4BE7D2A876596001ECB12 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE7C2A876596001ECB12 /* ImagePicker.swift */; };
+		FDB4BE802A87AD17001ECB12 /* EditReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE7F2A87AD17001ECB12 /* EditReportView.swift */; };
+		FDB4BE822A8803BF001ECB12 /* ReportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE812A8803BE001ECB12 /* ReportManager.swift */; };
+		FDB4BE862A8929BF001ECB12 /* MainReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB4BE852A8929BF001ECB12 /* MainReportView.swift */; };
 		FDCAE9B72954487700042B2B /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCAE9B62954487700042B2B /* UIDeviceExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		FD80C93428616E0B003CAB02 /* 週報包軌.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "週報包軌.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD80C93728616E0B003CAB02 /* WeeklyReportSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReportSwiftUIApp.swift; sourceTree = "<group>"; };
-		FD80C93928616E0B003CAB02 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FD80C93928616E0B003CAB02 /* MainReportViewR1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainReportViewR1.swift; sourceTree = "<group>"; };
 		FD80C93B28616E0C003CAB02 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FD80C93E28616E0C003CAB02 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FD80C94528617117003CAB02 /* ReportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewModel.swift; sourceTree = "<group>"; };
@@ -35,6 +54,24 @@
 		FD80C976286D5E85003CAB02 /* CheckedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckedView.swift; sourceTree = "<group>"; };
 		FD80C978286D5E8C003CAB02 /* HiddenView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenView.swift; sourceTree = "<group>"; };
 		FD80C97A286D5E92003CAB02 /* Checked.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Checked.json; sourceTree = "<group>"; };
+		FDB4BE5C2A84EEB5001ECB12 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		FDB4BE5E2A84F0C1001ECB12 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		FDB4BE602A84F395001ECB12 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		FDB4BE622A84F7B5001ECB12 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
+		FDB4BE642A853662001ECB12 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		FDB4BE662A85367C001ECB12 /* DateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateManager.swift; sourceTree = "<group>"; };
+		FDB4BE682A85DB4D001ECB12 /* FloatingCloudsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingCloudsView.swift; sourceTree = "<group>"; };
+		FDB4BE6A2A86040F001ECB12 /* AddTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskView.swift; sourceTree = "<group>"; };
+		FDB4BE6C2A860B0D001ECB12 /* CustomDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDatePicker.swift; sourceTree = "<group>"; };
+		FDB4BE6E2A861C00001ECB12 /* EditListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditListView.swift; sourceTree = "<group>"; };
+		FDB4BE762A86580A001ECB12 /* SQLiteDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteDatabase.swift; sourceTree = "<group>"; };
+		FDB4BE782A86581E001ECB12 /* SQLiteCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteCommands.swift; sourceTree = "<group>"; };
+		FDB4BE7A2A871C79001ECB12 /* HUDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDView.swift; sourceTree = "<group>"; };
+		FDB4BE7C2A876596001ECB12 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		FDB4BE7E2A876B31001ECB12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FDB4BE7F2A87AD17001ECB12 /* EditReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditReportView.swift; sourceTree = "<group>"; };
+		FDB4BE812A8803BE001ECB12 /* ReportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportManager.swift; sourceTree = "<group>"; };
+		FDB4BE852A8929BF001ECB12 /* MainReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainReportView.swift; sourceTree = "<group>"; };
 		FDCAE9B62954487700042B2B /* UIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDeviceExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -43,7 +80,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FDB4BE752A86429A001ECB12 /* SQLite in Frameworks */,
 				FD80C972286D5E28003CAB02 /* Lottie in Frameworks */,
+				FDB4BE722A864288001ECB12 /* IQKeyboardManagerSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,10 +108,11 @@
 		FD80C93628616E0B003CAB02 /* WeeklyReportSwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				FDB4BE7E2A876B31001ECB12 /* Info.plist */,
+				FD80C93728616E0B003CAB02 /* WeeklyReportSwiftUIApp.swift */,
 				FD80C94F28642726003CAB02 /* Models */,
 				FD80C9502864272B003CAB02 /* ViewModels */,
 				FD80C94E28642720003CAB02 /* Views */,
-				FD80C93728616E0B003CAB02 /* WeeklyReportSwiftUIApp.swift */,
 				FD80C973286D5E66003CAB02 /* Extensions */,
 				FD80C93B28616E0C003CAB02 /* Assets.xcassets */,
 				FD80C97A286D5E92003CAB02 /* Checked.json */,
@@ -92,8 +132,15 @@
 		FD80C94E28642720003CAB02 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				FD80C94B286212E9003CAB02 /* EditView.swift */,
-				FD80C93928616E0B003CAB02 /* ContentView.swift */,
+				FDB4BE5C2A84EEB5001ECB12 /* HomeView.swift */,
+				FDB4BE852A8929BF001ECB12 /* MainReportView.swift */,
+				FDB4BE6A2A86040F001ECB12 /* AddTaskView.swift */,
+				FDB4BE7F2A87AD17001ECB12 /* EditReportView.swift */,
+				FDB4BE6E2A861C00001ECB12 /* EditListView.swift */,
+				FDB4BE6C2A860B0D001ECB12 /* CustomDatePicker.swift */,
+				FDB4BE682A85DB4D001ECB12 /* FloatingCloudsView.swift */,
+				FDB4BE642A853662001ECB12 /* CalendarView.swift */,
+				FDB4BE7A2A871C79001ECB12 /* HUDView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -101,6 +148,7 @@
 		FD80C94F28642726003CAB02 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				FDB4BE5E2A84F0C1001ECB12 /* Task.swift */,
 				FD80C949286207DC003CAB02 /* UserManager.swift */,
 			);
 			path = Models;
@@ -109,6 +157,11 @@
 		FD80C9502864272B003CAB02 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				FDB4BE762A86580A001ECB12 /* SQLiteDatabase.swift */,
+				FDB4BE782A86581E001ECB12 /* SQLiteCommands.swift */,
+				FDB4BE622A84F7B5001ECB12 /* TaskManager.swift */,
+				FDB4BE812A8803BE001ECB12 /* ReportManager.swift */,
+				FDB4BE662A85367C001ECB12 /* DateManager.swift */,
 				FD80C94528617117003CAB02 /* ReportViewModel.swift */,
 			);
 			path = ViewModels;
@@ -117,10 +170,14 @@
 		FD80C973286D5E66003CAB02 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				FD80C93928616E0B003CAB02 /* MainReportViewR1.swift */,
+				FDB4BE602A84F395001ECB12 /* Extensions.swift */,
 				FD80C974286D5E7D003CAB02 /* LottieView.swift */,
 				FD80C976286D5E85003CAB02 /* CheckedView.swift */,
 				FD80C978286D5E8C003CAB02 /* HiddenView.swift */,
 				FDCAE9B62954487700042B2B /* UIDeviceExtension.swift */,
+				FDB4BE7C2A876596001ECB12 /* ImagePicker.swift */,
+				FD80C94B286212E9003CAB02 /* EditView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -143,6 +200,8 @@
 			name = WeeklyReportSwiftUI;
 			packageProductDependencies = (
 				FD80C971286D5E28003CAB02 /* Lottie */,
+				FDB4BE712A864288001ECB12 /* IQKeyboardManagerSwift */,
+				FDB4BE742A86429A001ECB12 /* SQLite */,
 			);
 			productName = WeeklyReportSwiftUI;
 			productReference = FD80C93428616E0B003CAB02 /* 週報包軌.app */;
@@ -174,6 +233,8 @@
 			mainGroup = FD80C92B28616E0B003CAB02;
 			packageReferences = (
 				FD80C970286D5E28003CAB02 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				FDB4BE702A864288001ECB12 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				FDB4BE732A86429A001ECB12 /* XCRemoteSwiftPackageReference "SQLite.swift" */,
 			);
 			productRefGroup = FD80C93528616E0B003CAB02 /* Products */;
 			projectDirPath = "";
@@ -203,11 +264,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD80C94628617117003CAB02 /* ReportViewModel.swift in Sources */,
+				FDB4BE862A8929BF001ECB12 /* MainReportView.swift in Sources */,
+				FDB4BE672A85367C001ECB12 /* DateManager.swift in Sources */,
 				FD80C94C286212E9003CAB02 /* EditView.swift in Sources */,
+				FDB4BE6F2A861C00001ECB12 /* EditListView.swift in Sources */,
 				FD80C979286D5E8C003CAB02 /* HiddenView.swift in Sources */,
-				FD80C93A28616E0B003CAB02 /* ContentView.swift in Sources */,
+				FDB4BE632A84F7B6001ECB12 /* TaskManager.swift in Sources */,
+				FDB4BE7B2A871C79001ECB12 /* HUDView.swift in Sources */,
+				FDB4BE5D2A84EEB5001ECB12 /* HomeView.swift in Sources */,
+				FDB4BE5F2A84F0C1001ECB12 /* Task.swift in Sources */,
+				FD80C93A28616E0B003CAB02 /* MainReportViewR1.swift in Sources */,
+				FDB4BE792A86581E001ECB12 /* SQLiteCommands.swift in Sources */,
+				FDB4BE6D2A860B0D001ECB12 /* CustomDatePicker.swift in Sources */,
+				FDB4BE802A87AD17001ECB12 /* EditReportView.swift in Sources */,
 				FDCAE9B72954487700042B2B /* UIDeviceExtension.swift in Sources */,
+				FDB4BE7D2A876596001ECB12 /* ImagePicker.swift in Sources */,
+				FDB4BE652A853662001ECB12 /* CalendarView.swift in Sources */,
+				FDB4BE612A84F395001ECB12 /* Extensions.swift in Sources */,
 				FD80C94A286207DC003CAB02 /* UserManager.swift in Sources */,
+				FDB4BE822A8803BF001ECB12 /* ReportManager.swift in Sources */,
+				FDB4BE772A86580A001ECB12 /* SQLiteDatabase.swift in Sources */,
+				FDB4BE692A85DB4D001ECB12 /* FloatingCloudsView.swift in Sources */,
+				FDB4BE6B2A86040F001ECB12 /* AddTaskView.swift in Sources */,
 				FD80C977286D5E85003CAB02 /* CheckedView.swift in Sources */,
 				FD80C93828616E0B003CAB02 /* WeeklyReportSwiftUIApp.swift in Sources */,
 				FD80C975286D5E7D003CAB02 /* LottieView.swift in Sources */,
@@ -337,12 +415,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"WeeklyReportSwiftUI/Preview Content\"";
 				DEVELOPMENT_TEAM = 48394HVWDA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WeeklyReportSwiftUI/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "使用麥克風權限用於語音辨識輸入";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "使用麥克風權限用於語音辨識輸入";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -354,7 +433,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.novachen.WeeklyReportSwiftUI;
 				PRODUCT_NAME = "週報包軌";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -369,12 +448,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"WeeklyReportSwiftUI/Preview Content\"";
 				DEVELOPMENT_TEAM = 48394HVWDA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WeeklyReportSwiftUI/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "使用麥克風權限用於語音辨識輸入";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "使用麥克風權限用於語音辨識輸入";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -386,7 +466,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.novachen.WeeklyReportSwiftUI;
 				PRODUCT_NAME = "週報包軌";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -427,6 +507,22 @@
 				minimumVersion = 3.0.0;
 			};
 		};
+		FDB4BE702A864288001ECB12 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		FDB4BE732A86429A001ECB12 /* XCRemoteSwiftPackageReference "SQLite.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -434,6 +530,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FD80C970286D5E28003CAB02 /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
+		};
+		FDB4BE712A864288001ECB12 /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FDB4BE702A864288001ECB12 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+		FDB4BE742A86429A001ECB12 /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FDB4BE732A86429A001ECB12 /* XCRemoteSwiftPackageReference "SQLite.swift" */;
+			productName = SQLite;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

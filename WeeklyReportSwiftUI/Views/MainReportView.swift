@@ -1,17 +1,20 @@
 //
-//  ContentView.swift
+//  MainReportView.swift
 //  WeeklyReportSwiftUI
 //
-//  Created by Ryan@work on 2022/6/21.
+//  Created by @Ryan on 2023/8/13.
 //
 
 import SwiftUI
 import PDFKit
 import MessageUI
 
-struct ContentView: View {
+struct MainReportView: View {
     
+//    @EnvironmentObject var taskManager: TaskManager
+//    @ObservedObject var taskManager = TaskManager()
     @ObservedObject var reportViewModel = ReportViewModel()
+//    @EnvironmentObject var reportViewModel: ReportViewModel
 //    陳俊宏-工作週報_111-06-13_to_111-06-17
     @State var data: Data?
     @State private var isShowingPDFSheet = false
@@ -20,23 +23,14 @@ struct ContentView: View {
     @State var result: Result<MFMailComposeResult, Error>? = nil
     @State var isShowingMailView: Bool = false
     @State var fileName = "陳俊宏-工作週報_111-06-13_to_111-06-17"
-    @State var isShowAlert = false
+    @State var isShowAlert: Bool = false
     
     @State var isRefresh: Bool = false
     
     @State var PDFUrl: URL?
     @State var isShowingShareSheet = false
-   
-    var isMini: Bool = false
     
-    init(){
-        reportViewModel.dateInitManager()
-        
-        switch UIDevice().type {
-        case .iPhone12Mini, .iPhone13Mini: isMini = true
-        default: isMini = false
-        }
-    }
+    @AppStorage("currentHighlight") var currentHighlight: Int = 0
     
     var body: some View {
         
@@ -65,14 +59,25 @@ struct ContentView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.white)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                let impactLight = UIImpactFeedbackGenerator(style: .light)
+                impactLight.impactOccurred()
+            }
+        }
     }
 }
 
-extension ContentView {
+extension MainReportView {
     
     private var alertButton: some View {
         
         Button {
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                let impactLight = UIImpactFeedbackGenerator(style: .light)
+                impactLight.impactOccurred()
+            }
             
             isShowAlert = true
             
@@ -82,9 +87,14 @@ extension ContentView {
                 .foregroundColor(.black)
                 .bold()
         }
+        
         .alert("選擇動作", isPresented: $isShowAlert, actions: {
             
             Button("編輯ＰＤＦ", role: .destructive) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                    let impactLight = UIImpactFeedbackGenerator(style: .light)
+                    impactLight.impactOccurred()
+                }
                 isShowingEditSheet.toggle()
             }
             
@@ -97,6 +107,8 @@ extension ContentView {
                     reportViewModel.exportViewToPDF()
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        let impactLight = UIImpactFeedbackGenerator(style: .light)
+                        impactLight.impactOccurred()
                         isShowingPDFSheet.toggle()
                     }
                 }
@@ -113,13 +125,15 @@ extension ContentView {
                     reportViewModel.exportViewToPDF()
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        let impactLight = UIImpactFeedbackGenerator(style: .light)
+                        impactLight.impactOccurred()
                         isShowingMailView.toggle()
                     }
                 }
             }
             
             Button("分享ＰＤＦ"){
-                
+
                 let group = DispatchGroup()
                 group.enter()
                 reportViewModel.clearAllFile()
@@ -129,6 +143,10 @@ extension ContentView {
                 reportViewModel.exportViewToPDF()
                 self.PDFUrl = reportViewModel.outputFileURL
                 isShowingShareSheet.toggle()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                    let impactLight = UIImpactFeedbackGenerator(style: .light)
+                    impactLight.impactOccurred()
+                }
    
             }
             
@@ -136,7 +154,8 @@ extension ContentView {
             }
         })
         .sheet(isPresented: $isShowingEditSheet) {
-            EditView()
+            EditReportView()
+                .onAppear(perform: UIApplication.shared.addTapGestureRecognizer)
         }
         
         .sheet(isPresented: $isShowingPDFSheet) {
@@ -315,7 +334,7 @@ extension ContentView {
                 .padding(6)
                 .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
-            Text("\(UserDefaults.standard.string(forKey: "thisWeekPlan") ?? "本週計畫")")
+            Text("\(UserDefaults.standard.string(forKey: "thisWeekPlan") ?? "")")
                 .font(.system(size: 10))
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 60, alignment: .leading)
@@ -338,7 +357,7 @@ extension ContentView {
                 .padding(6)
                 .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
-            Text("\(UserDefaults.standard.string(forKey: "nextWeekPlan") ?? "下週計畫")")
+            Text("\(UserDefaults.standard.string(forKey: "nextWeekPlan") ?? "")")
                 .font(.system(size: 10))
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 60, alignment: .leading)
@@ -361,7 +380,7 @@ extension ContentView {
                 .padding(6)
                 .overlay(Rectangle().stroke(lineWidth: 1).foregroundColor(.black))
             
-            Text("\(UserDefaults.standard.string(forKey: "suggestion") ?? "無")")
+            Text("\(UserDefaults.standard.string(forKey: "suggestion") ?? "")")
                 .font(.system(size: 10))
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity, maxHeight: 80, alignment: .leading)
@@ -446,14 +465,14 @@ struct MailView: UIViewControllerRepresentable {
     func makeUIViewController(context: UIViewControllerRepresentableContext<MailView>) -> MFMailComposeViewController {
         
         let urlString = "<privateurl>"
-        let url = URL(string: urlString)
+        _ = URL(string: urlString)
         let userToEmail = UserDefaults.standard.string(forKey: "userToEmail") ?? "defaultToUser@email.com"
         let userCcEmail = UserDefaults.standard.string(forKey: "userCcEmail") ?? ""
         let userBccEmail = UserDefaults.standard.string(forKey: "userBccEmail") ?? ""
-        var userEmailTitle = outputFileName
-        var userEmailContent = UserDefaults.standard.string(forKey: "userEmailContent")!
-        var userEmailSignature = UserDefaults.standard.string(forKey: "userEmailSignature")!
-        var userEmailAppendText = UserDefaults.standard.string(forKey: "userEmailAppendText") ?? ""
+        let userEmailTitle = outputFileName
+        let userEmailContent = UserDefaults.standard.string(forKey: "userEmailContent")!
+        let userEmailSignature = UserDefaults.standard.string(forKey: "userEmailSignature")!
+        let userEmailAppendText = UserDefaults.standard.string(forKey: "userEmailAppendText") ?? ""
 
         let vc = MFMailComposeViewController()
         vc.mailComposeDelegate = context.coordinator
@@ -503,33 +522,3 @@ struct ShareSheet: UIViewControllerRepresentable {
     }
     
 }
-
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView(userName: <#T##Binding<String>#>)
-//            .environmentObject(ReportViewModel())
-//    }
-//}
-
-//            Button(".") {
-//                showingSheet.toggle()
-//            }
-//            .sheet(isPresented: $showingSheet) {
-//                PDFKitRepresentedView(reportViewModel.outputFileURL)
-//            }
-            
-//            Button {
-//                reportViewModel.exportHtmlToPdf("1233333", title: "11")
-//            } label: {
-//                Text("Button HTML")
-//                    .bold()
-//            }
-//
-//            Spacer()
-//
-//            Button("Show HTML Sheet") {
-//                showingSheet2.toggle()
-//            }
-//            .sheet(isPresented: $showingSheet2) {
-//                PDFKitRepresentedView(reportViewModel.outputHtmlURL!)
-//            }
